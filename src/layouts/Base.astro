@@ -1,0 +1,70 @@
+---
+interface Props { title?: string; description?: string }
+const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.' } = Astro.props;
+const nav = [
+  { label: 'Home', href: '/' },
+  { label: 'Residential for Sale', href: '/residential-property-for-sale' },
+  { label: 'Commercial for Sale', href: '/commercial-property-for-sale' },
+  { label: 'Land for Sale', href: '/land-for-sale' },
+  { label: 'Residential for Rent', href: '/residential-property-for-rent' },
+  { label: 'Commercial for Rent', href: '/commercial-property-for-rent' },
+  { label: 'Meet the Team', href: '/meet-the-team' },
+  { label: 'Our Company', href: '/company-history' },
+  { label: 'Services', href: '/property-management' },
+  { label: 'Payment Portal', href: '/payment-portal' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a href="/" class="brand">MIDGETT &amp; FITE REAL ESTATE</a>
+        <div class="phone">Call today! (615) 444-3136</div>
+      </div>
+      <nav class="wrap"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
+    </header>
+    <main class="wrap"><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>(615) 444-3136 &nbsp;·&nbsp; 312 South Maple Street, Lebanon, TN 37087</p>
+        <p class="disclaimer">All information deemed reliable but not guaranteed and should be verified independently. All properties are subject to prior sale, change or withdrawal. Midgett &amp; Fite is an Equal Opportunity Employer and supports the Fair Housing Act.</p>
+        <p><a href="http://mail.midgettfite.com">Employee Login</a></p>
+      </div>
+    </footer>
+    <style is:global>
+      :root { --ink:#1f2933; --muted:#6b7280; --accent:#0b5; --line:#e5e7eb; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); line-height:1.5; }
+      .wrap { max-width: 1080px; margin:0 auto; padding: 0 20px; }
+      .site-header { border-bottom:1px solid var(--line); padding:14px 0; }
+      .site-header .wrap { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+      .brand { font-weight:700; letter-spacing:.5px; text-decoration:none; color:var(--ink); }
+      .phone { color:var(--muted); font-size:.9rem; }
+      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:14px; padding:10px 0 0; margin:0; }
+      nav a { text-decoration:none; color:var(--ink); font-size:.86rem; }
+      nav a:hover { color:var(--accent); }
+      main { padding: 28px 20px 48px; min-height: 50vh; }
+      h1 { margin-top:0; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+      .card { display:block; border:1px solid var(--line); border-radius:10px; overflow:hidden; text-decoration:none; color:inherit; }
+      .card .thumb { aspect-ratio:4/3; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
+      .card .thumb img { width:100%; height:100%; object-fit:cover; }
+      .card .noimg { color:var(--muted); font-size:.85rem; }
+      .card .body { padding:12px 14px; }
+      .price { font-size:1.15rem; font-weight:700; }
+      .addr { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
+      .specs { display:flex; gap:12px; font-size:.85rem; color:var(--ink); }
+      .badge { display:inline-block; background:#fde68a; color:#92400e; font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-bottom:6px; }
+      .site-footer { border-top:1px solid var(--line); padding:24px 0; margin-top:40px; font-size:.85rem; color:var(--muted); }
+      .disclaimer { font-size:.75rem; }
+    </style>
+  </body>
+</html>

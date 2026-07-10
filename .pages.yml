@@ -1,0 +1,42 @@
+media:
+  - name: images
+    input: public/uploads
+    output: /uploads
+    extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: listings
+    label: Property Listings
+    type: collection
+    path: src/content/listings
+    filename: '{fields.category}-{fields.address}.md'
+    fields:
+      - { name: title, label: Title / Short Name, type: string }
+      - name: category
+        label: Listing Type
+        type: select
+        options:
+          values:
+            - { label: For Sale — Residential, value: residential-sale }
+            - { label: For Sale — Commercial,  value: commercial-sale }
+            - { label: For Sale — Land,        value: land-sale }
+            - { label: For Rent — Residential, value: residential-rent }
+            - { label: For Rent — Commercial,  value: commercial-rent }
+      - name: status
+        label: Status
+        type: select
+        options: { values: [active, pending, sold-leased] }
+        default: active
+      - { name: price, label: Price ($), type: number }
+      - { name: priceUpdated, label: "Show 'Price Update!' badge", type: boolean, default: false }
+      - { name: address, label: Address, type: string }
+      - { name: city,  label: City,  type: string, default: Lebanon }
+      - { name: state, label: State, type: string, default: TN }
+      - { name: zip,   label: ZIP,   type: string, required: false }
+      - { name: beds,  label: Bedrooms,   type: number, required: false }
+      - { name: baths, label: Bathrooms,  type: number, required: false }
+      - { name: sqft,  label: Square Feet, type: number, required: false }
+      - { name: photos, label: Photos, type: image, options: { media: images, multiple: true } }
+      - { name: videoUrl, label: Video Tour Link, type: string, required: false }
+      - { name: description, label: Description, type: text }
+      - { name: listedDate, label: Date Listed, type: date }

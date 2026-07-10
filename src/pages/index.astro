@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const featured = (await getCollection('listings'))
+  .filter((l) => l.data.status === 'active')
+  .sort((a, b) => +b.data.listedDate - +a.data.listedDate)
+  .slice(0, 3);
+import ListingCard from '../components/ListingCard.astro';
+---
+<Base>
+  <section>
+    <h1>Fulfilling your real estate dreams in Middle Tennessee.</h1>
+    <p>Midgett &amp; Fite Real Estate is a family-focused firm serving Wilson County and Greater Nashville with brokerage, property management, and real estate investment services. Give us a call today at <strong>(615) 444-3136</strong>.</p>
+  </section>
+  {featured.length > 0 && (
+    <section>
+      <h2>Featured listings</h2>
+      <div class="grid">{featured.map((l) => <ListingCard l={l} />)}</div>
+    </section>
+  )}
+  <section>
+    <h2>What people say about us</h2>
+    <p><em>Testimonials to be migrated from the current site.</em></p>
+  </section>
+</Base>

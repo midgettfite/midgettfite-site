@@ -1,0 +1,21 @@
+---
+const { l } = Astro.props;
+const d = l.data;
+const isRent = d.category === 'residential-rent' || d.category === 'commercial-rent';
+const money = (n: number) => '$' + n.toLocaleString('en-US');
+---
+<a class="card" href={`/property/${l.id}`}>
+  <div class="thumb">
+    {d.photos && d.photos.length ? <img src={d.photos[0]} alt={d.address} /> : <span class="noimg">Photo coming soon</span>}
+  </div>
+  <div class="body">
+    {d.priceUpdated && <span class="badge">Price Update!</span>}
+    <div class="price">{money(d.price)}{isRent ? '/mo' : ''}</div>
+    <div class="addr">{d.address}, {d.city}, {d.state}</div>
+    <div class="specs">
+      {d.beds != null && <span>{d.beds} bd</span>}
+      {d.baths != null && <span>{d.baths} ba</span>}
+      {d.sqft != null && <span>{d.sqft.toLocaleString()} sqft</span>}
+    </div>
+  </div>
+</a>

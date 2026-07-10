@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Contact Us | Midgett & Fite Real Estate">
+  <h1>Get in touch</h1>
+  <p>Speak to one of our team members today — (615) 444-3136 — or send us a message.</p>
+  <form name="contact" method="POST" data-static-form-name="contact" style="max-width:520px;display:grid;gap:12px;">
+    <input type="text" name="name" placeholder="Your name" required />
+    <input type="email" name="email" placeholder="Your email" required />
+    <input type="tel" name="phone" placeholder="Phone (optional)" />
+    <textarea name="message" placeholder="How can we help?" rows="5" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+  <p style="color:#6b7280;font-size:.85rem;margin-top:10px;">Form submission handler to be wired at build (Cloudflare Pages Forms or a Worker → office@midgettfite.com).</p>
+</Base>
