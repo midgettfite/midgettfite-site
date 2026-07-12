@@ -1,10 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-const PAYMENT_URL = 'https://REPLACE-WITH-TENANT-PAYMENT-URL';
+const PAYMENT_URL = 'https://quickclick.com/r/igdkjqhwsmovqxfosodb7aj9texnbm';
 ---
-<Base title="Payment Portal | Midgett & Fite Real Estate">
-  <h1>Tenant Payment Portal</h1>
-  <p>Pay your rent online through our secure payment system.</p>
-  <p><a href={PAYMENT_URL}>Go to the payment portal &rarr;</a></p>
-  <p style="color:#6b7280;font-size:.85rem;">Replace PAYMENT_URL with the real tenant-payment link from the current Wix site.</p>
+<Base title="Payment Portal | Midgett & Fite Real Estate" description="Pay your rent online through the Midgett & Fite secure tenant payment portal.">
+  <h1>Payment Portal</h1>
+  <p>Midgett &amp; Fite is a customer-focused company, and we're always looking for ways to improve the customer's experience. This payment page is provided by us to allow you, our customer, a way to pay from the comfort of your home.</p>
+  <p>Please be aware that a convenience fee of <strong>3.45%</strong> will be added to any payment made through this portal, so the card service company fee can be covered.</p>
+  <p>If you would like to set up recurring payments, please let our staff know and we can initiate that process for you.</p>
+  <p>Thank you for your business!</p>
+  <p><a class="pay-btn" href={PAYMENT_URL} target="_blank" rel="noopener">Pay Here &rarr;</a></p>
 </Base>
+<style>
+  .pay-btn { display:inline-block; background:#b0413e; color:#fff; text-decoration:none; font-weight:700; padding:12px 28px; border-radius:6px; margin-top:8px; }
+  .pay-btn:hover { background:#8f3230; }
+</style>

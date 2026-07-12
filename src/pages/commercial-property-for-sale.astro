@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import ListingCard from '../components/ListingCard.astro';
 const listings = (await getCollection('listings'))
-  .filter((l) => l.data.category === 'commercial-sale' && l.data.status !== 'sold-leased')
-  .sort((a, b) => +b.data.listedDate - +a.data.listedDate);
+  .filter((l) => l.data.category === 'commercial-sale')
+  .sort((a, b) => (a.data.status === 'sold-leased' ? 1 : 0) - (b.data.status === 'sold-leased' ? 1 : 0) || +b.data.listedDate - +a.data.listedDate);
 ---
 <Base title="Commercial Property for Sale | Midgett & Fite Real Estate">
   <h1>Commercial Property for Sale</h1>

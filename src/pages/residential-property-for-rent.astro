@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import ListingCard from '../components/ListingCard.astro';
 const listings = (await getCollection('listings'))
-  .filter((l) => l.data.category === 'residential-rent' && l.data.status !== 'sold-leased')
-  .sort((a, b) => +b.data.listedDate - +a.data.listedDate);
+  .filter((l) => l.data.category === 'residential-rent')
+  .sort((a, b) => (a.data.status === 'sold-leased' ? 1 : 0) - (b.data.status === 'sold-leased' ? 1 : 0) || +b.data.listedDate - +a.data.listedDate);
 ---
 <Base title="Residential Property for Rent | Midgett & Fite Real Estate">
   <h1>Residential Property for Rent</h1>

@@ -19,7 +19,38 @@ import ListingCard from '../components/ListingCard.astro';
     </section>
   )}
   <section>
-    <h2>What people say about us</h2>
-    <p><em>Testimonials to be migrated from the current site.</em></p>
+    <h2>What People Say About Us</h2>
+    <div class="quotes-home">
+      <blockquote class="quote"><p>&ldquo;Dan is the man you want in your corner! His high level of knowledge and integrity were key for us while making such a major decision. We highly recommend them, especially to first-time buyers like ourselves.&rdquo;</p><cite>&mdash; Jason L.</cite></blockquote>
+      <blockquote class="quote"><p>&ldquo;Midgett &amp; Fite is a family-friendly real estate business whose employees deeply care for clients beyond what is being bought or sold. We will gladly choose to work with them again in the future.&rdquo;</p><cite>&mdash; Jennifer A.</cite></blockquote>
+    </div>
+    <p><a href="/testimonials">Read more testimonials &rarr;</a></p>
+  </section>
+
+  <section>
+    <h2>Get in Touch</h2>
+    <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
+    <p><strong>(615) 444-3136</strong> &nbsp;·&nbsp; <a href="/contact">Send us a message</a></p>
+  </section>
+
+  <section class="resources">
+    <h2>Other Real Estate Resources</h2>
+    <ul>
+      <li><a href="https://www.hud.gov/program_offices/fair_housing_equal_opp" target="_blank" rel="noopener">Equal Housing</a></li>
+      <li><a href="https://www.realtor.org" target="_blank" rel="noopener">Realtor.org</a></li>
+      <li><a href="https://www.tarnet.com" target="_blank" rel="noopener">TARNET.COM</a></li>
+      <li><a href="https://www.tn.gov/commerce" target="_blank" rel="noopener">TN Dept. of Commerce &amp; Insurance</a></li>
+      <li><a href="https://www.lebanonwilsonchamber.com" target="_blank" rel="noopener">Lebanon Wilson Co. Chamber of Commerce</a></li>
+      <li><a href="https://www.emtar.com" target="_blank" rel="noopener">Eastern Middle TN Association of Realtors</a></li>
+    </ul>
   </section>
 </Base>
+<style>
+  .quotes-home { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:16px 0; }
+  .quote { margin:0; padding:16px 20px; border-left:4px solid #b0413e; background:#faf7f5; border-radius:6px; }
+  .quote p { margin:0 0 8px; }
+  .quote cite { color:#6b7280; font-style:normal; font-weight:600; }
+  .resources ul { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px 22px; }
+  .resources a { font-size:.9rem; }
+  @media (max-width:560px){ .quotes-home { grid-template-columns:1fr; } }
+</style>

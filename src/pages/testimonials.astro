@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+const testimonials = [
+  { name: 'Levi H.', quote: `When my dad died, the house he left me was a huge mess. Dan worked with me and my brother on a complicated remodeling venture and got it done really fast and professionally and then turned around and sold it. Dan is so knowledgeable about the market and knew how to guide us every step of the way. He's an expert negotiator as well and worked really hard to get us the best deal possible, and we ended up getting a much better price than I would have thought possible! He was so professional and outstandingly upright about the whole process. He's also FAST. I really can't imagine having a better real estate agent. I can't recommend him enough.` },
+  { name: 'Heather L.', quote: `The sales team "Family" at Midgett & Fite were absolutely phenomenal. They are very knowledgeable, friendly, and know the business backward and forwards. They relay any and all information in layman's terms so you can understand and make a sound decision on your purchase. They are honest, caring, and want you to have a phenomenal experience. Please allow this group of wonderful, faith-filled people to assist you with selling or purchasing your home. It will be one of the best decisions you will make.` },
+  { name: 'Jason L.', quote: `Dan is the man you want in your corner! His high level of knowledge and integrity were key for us while making such a major decision. He and his entire team were honest and attentive to our unique circumstances, and we highly recommend them, especially to first-time buyers like ourselves. Thank you, Midgett & Fite Real Estate!` },
+  { name: 'Anna S.', quote: `Midgett and Fite did a great job helping my husband and I find and purchase our very first home! They were very attentive to all the things that we wanted in a new home, and did a great job working within our time schedule and our budgeting needs. They went above and beyond to help us even through some difficult time constraints and complications with the contract. I would definitely recommend them to anyone looking to buy or sell a home.` },
+  { name: 'Micah M.', quote: `Thank you, Midgett & Fite, for helping me buy my first house! Dan Midgett did a great job looking hard and finding something that would meet my needs, well within my budget. I'm really happy!` },
+  { name: 'Matthew H.', quote: `Great service! Dan helped me find the perfect property and took care of lots of things I wouldn't have thought about. He obviously knows the business inside and out and isn't afraid to be honest about things that might be of concern. I'd recommend him to anyone.` },
+  { name: 'Jennifer A.', quote: `Midgett & Fite is a family-friendly real estate business whose employees deeply care for clients beyond what is being bought or sold. We have greatly enjoyed and benefited from working with Midgett & Fite in the past and will gladly choose to work with them again in the future.` },
+  { name: 'Silas & Jade B.', quote: `We wanted to take a moment now that the boxes are finally clearing out to say a massive thank you to Dan for helping us find our very first home. Thanks for your expertise, your guidance, and for advocating for us every step of the way. We couldn't have done this without you, and we will be recommending you to anyone we know looking to buy or sell!` },
+  { name: 'Caleb S.', quote: `Midgett and Fite walked with us every step of the way as we purchased our first home. Dan Midgett is very flexible and thorough, making legalese understandable to the uninitiated. As an added bonus, the office is a cozy, comfortable place to sign papers.` },
+  { name: 'Wade J.', quote: `Dan Midgett did an outstanding job negotiating the contract for our church building. We continue to reap the benefits of his attention to detail and skilled negotiation.` },
+];
+---
+<Base title="Testimonials | Midgett & Fite Real Estate" description="What clients say about working with Midgett & Fite Real Estate.">
+  <h1>What People Say About Us</h1>
+  <div class="quotes">
+    {testimonials.map((t) => (
+      <blockquote class="quote">
+        <p>&ldquo;{t.quote}&rdquo;</p>
+        <cite>&mdash; {t.name}</cite>
+      </blockquote>
+    ))}
+  </div>
+</Base>
+<style>
+  .quotes { display:grid; gap:22px; margin-top:20px; max-width:760px; }
+  .quote { margin:0; padding:18px 22px; border-left:4px solid #b0413e; background:#faf7f5; border-radius:6px; }
+  .quote p { margin:0 0 8px; }
+  .quote cite { color:#6b7280; font-style:normal; font-weight:600; }
+</style>

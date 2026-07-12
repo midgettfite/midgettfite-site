@@ -2,8 +2,13 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Contact Us | Midgett & Fite Real Estate">
-  <h1>Get in touch</h1>
-  <p>Speak to one of our team members today — (615) 444-3136 — or send us a message.</p>
+  <h1>Get in Touch</h1>
+  <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
+  <p class="contact-lines">
+    <strong>Phone:</strong> <a href="tel:+16154443136">(615) 444-3136</a><br />
+    <strong>Email:</strong> <a href="mailto:midgettandfiteoffice@gmail.com">midgettandfiteoffice@gmail.com</a><br />
+    <strong>Office:</strong> 312 South Maple Street, Lebanon, TN 37087
+  </p>
   <form name="contact" method="POST" data-static-form-name="contact" style="max-width:520px;display:grid;gap:12px;">
     <input type="text" name="name" placeholder="Your name" required />
     <input type="email" name="email" placeholder="Your email" required />
@@ -11,5 +16,5 @@ import Base from '../layouts/Base.astro';
     <textarea name="message" placeholder="How can we help?" rows="5" required></textarea>
     <button type="submit">Send</button>
   </form>
-  <p style="color:#6b7280;font-size:.85rem;margin-top:10px;">Form submission handler to be wired at build (Cloudflare Pages Forms or a Worker → office@midgettfite.com).</p>
+  <p style="color:#6b7280;font-size:.85rem;margin-top:10px;">Form delivery to be wired at build (Cloudflare Pages Forms or a Worker &rarr; midgettandfiteoffice@gmail.com until Zoho email is live).</p>
 </Base>

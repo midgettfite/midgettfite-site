@@ -3,14 +3,20 @@ const { l } = Astro.props;
 const d = l.data;
 const isRent = d.category === 'residential-rent' || d.category === 'commercial-rent';
 const money = (n: number) => '$' + n.toLocaleString('en-US');
+const soldLeased = d.status === 'sold-leased';
+const soldLabel = isRent ? 'LEASED!' : 'SOLD!';
 ---
 <a class="card" href={`/property/${l.id}`}>
   <div class="thumb">
     {d.photos && d.photos.length ? <img src={d.photos[0]} alt={d.address} /> : <span class="noimg">Photo coming soon</span>}
   </div>
   <div class="body">
-    {d.priceUpdated && <span class="badge">Price Update!</span>}
-    <div class="price">{money(d.price)}{isRent ? '/mo' : ''}</div>
+    {soldLeased
+      ? <span class="badge sold">{soldLabel}</span>
+      : (<>
+          {d.priceUpdated && <span class="badge">Price Update!</span>}
+          {d.price > 0 && <div class="price">{money(d.price)}{isRent ? '/mo' : ''}</div>}
+        </>)}
     <div class="addr">{d.address}, {d.city}, {d.state}</div>
     <div class="specs">
       {d.beds != null && <span>{d.beds} bd</span>}
@@ -19,3 +25,6 @@ const money = (n: number) => '$' + n.toLocaleString('en-US');
     </div>
   </div>
 </a>
+<style>
+  .badge.sold { background:#b0413e; color:#fff; }
+</style>

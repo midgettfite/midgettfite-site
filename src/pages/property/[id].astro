@@ -11,13 +11,19 @@ const { l } = Astro.props;
 const d = l.data;
 const isRent = d.category === 'residential-rent' || d.category === 'commercial-rent';
 const money = (n: number) => '$' + n.toLocaleString('en-US');
+const soldLeased = d.status === 'sold-leased';
+const soldLabel = isRent ? 'LEASED!' : 'SOLD!';
 const { Content } = await render(l);
 ---
 <Base title={`${d.address} | Midgett & Fite Real Estate`}>
   <p><a href="javascript:history.back()">&larr; Back to listings</a></p>
   <h1>{d.address}</h1>
-  {d.priceUpdated && <span class="badge">Price Update!</span>}
-  <p class="price">{money(d.price)}{isRent ? '/mo' : ''}</p>
+  {soldLeased
+    ? <p><span class="badge" style="background:#b0413e;color:#fff;">{soldLabel}</span></p>
+    : (<>
+        {d.priceUpdated && <span class="badge">Price Update!</span>}
+        {d.price > 0 && <p class="price">{money(d.price)}{isRent ? '/mo' : ''}</p>}
+      </>)}
   <p class="addr">{d.city}, {d.state} {d.zip}</p>
   <p class="specs">
     {d.beds != null && <span>{d.beds} bd&nbsp;&nbsp;</span>}
