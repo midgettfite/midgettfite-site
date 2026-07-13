@@ -1,27 +1,35 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-const featured = (await getCollection('listings'))
-  .filter((l) => l.data.status === 'active')
-  .sort((a, b) => +b.data.listedDate - +a.data.listedDate)
-  .slice(0, 3);
-import ListingCard from '../components/ListingCard.astro';
-const HERO = '/img/hero-home.png';
 ---
 <Base>
-  <section class="hero">
-    <img src={HERO} alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
+  <section class="hero" id="hero-slideshow">
+    <div class="slides">
+      <div class="slide is-active" data-slide="0">
+        <img src="/img/hero-home.png" alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
+      </div>
+      <div class="slide" data-slide="1">
+        <img src="/img/hero-residential.jpg" alt="Residential real estate in Middle Tennessee" />
+        <div class="hero-cta">
+          <a href="/residential-property-for-sale" class="cta-btn">View Residential Property For Sale</a>
+          <a href="/residential-property-for-rent" class="cta-btn">View Residential Property For Rent</a>
+        </div>
+      </div>
+      <div class="slide" data-slide="2">
+        <img src="/img/hero-commercial.jpg" alt="Commercial real estate in Middle Tennessee" />
+        <div class="hero-cta">
+          <a href="/commercial-property-for-sale" class="cta-btn">View Commercial Property For Sale</a>
+          <a href="/commercial-property-for-rent" class="cta-btn">View Commercial Property For Rent</a>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="hero-arrow prev" aria-label="Previous slide">&lsaquo;</button>
+    <button type="button" class="hero-arrow next" aria-label="Next slide">&rsaquo;</button>
+    <div class="hero-dots">
+      <button type="button" class="dot is-active" data-dot="0" aria-label="Slide 1"></button>
+      <button type="button" class="dot" data-dot="1" aria-label="Slide 2"></button>
+      <button type="button" class="dot" data-dot="2" aria-label="Slide 3"></button>
+    </div>
   </section>
-  <section class="intro">
-    <h1>Fulfilling your real estate dreams in Middle Tennessee.</h1>
-    <p>Midgett &amp; Fite Real Estate is a family-focused firm serving Wilson County and Greater Nashville with brokerage, property management, and real estate investment services. Give us a call today at <strong>(615) 444-3136</strong>.</p>
-  </section>
-  {featured.length > 0 && (
-    <section>
-      <h2>Featured listings</h2>
-      <div class="grid">{featured.map((l) => <ListingCard l={l} />)}</div>
-    </section>
-  )}
   <section>
     <h2>What People Say About Us</h2>
     <div class="quotes-home">
@@ -50,9 +58,22 @@ const HERO = '/img/hero-home.png';
   </section>
 </Base>
 <style>
-  .hero { margin:0 calc(50% - 50vw) 8px; width:100vw; }
-  .hero img { width:100%; height:auto; display:block; }
-  .intro { text-align:center; max-width:760px; margin:0 auto 8px; }
+  .hero { position:relative; margin:0 calc(50% - 50vw) 8px; width:100vw; overflow:hidden; background:#111; }
+  .slides { position:relative; width:100%; aspect-ratio:2544/681; min-height:220px; }
+  .slide { position:absolute; inset:0; opacity:0; visibility:hidden; transition:opacity .5s ease; }
+  .slide.is-active { opacity:1; visibility:visible; }
+  .slide img { width:100%; height:100%; object-fit:cover; display:block; }
+  .hero-cta { position:absolute; left:0; right:0; bottom:14%; display:flex; justify-content:center; gap:16px; flex-wrap:wrap; padding:0 16px; }
+  .cta-btn { background:rgba(20,20,20,.72); color:#fff; border:1px solid var(--accent); padding:10px 18px; font-size:.85rem; font-weight:600; text-decoration:none; letter-spacing:.3px; }
+  .cta-btn:hover { background:var(--accent); }
+  .hero-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.45); color:#fff; border:none; width:36px; height:36px; border-radius:50%; font-size:1.4rem; line-height:1; cursor:pointer; z-index:2; }
+  .hero-arrow.prev { left:14px; }
+  .hero-arrow.next { right:14px; }
+  .hero-arrow:hover { background:rgba(0,0,0,.7); }
+  .hero-dots { position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center; gap:8px; z-index:2; }
+  .dot { width:8px; height:8px; border-radius:50%; border:none; background:rgba(255,255,255,.5); padding:0; cursor:pointer; }
+  .dot.is-active { background:#fff; }
+  @media (max-width:640px){ .slides{ aspect-ratio:4/3; } .hero-cta{ bottom:10%; } .cta-btn{ padding:8px 12px; font-size:.78rem; } }
   .quotes-home { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:16px 0; }
   .quote { margin:0; padding:16px 20px; border-left:4px solid #b0413e; background:#faf7f5; border-radius:6px; }
   .quote p { margin:0 0 8px; }
@@ -61,3 +82,30 @@ const HERO = '/img/hero-home.png';
   .resources a { font-size:.9rem; }
   @media (max-width:560px){ .quotes-home { grid-template-columns:1fr; } }
 </style>
+<script>
+  const root = document.getElementById('hero-slideshow');
+  if (root) {
+    const slides = Array.from(root.querySelectorAll('.slide'));
+    const dots = Array.from(root.querySelectorAll('.dot'));
+    let current = 0;
+    let timer: ReturnType<typeof setInterval>;
+
+    function show(i: number) {
+      current = (i + slides.length) % slides.length;
+      slides.forEach((s, idx) => s.classList.toggle('is-active', idx === current));
+      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === current));
+    }
+    function next() { show(current + 1); }
+    function prev() { show(current - 1); }
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, 6000);
+    }
+
+    root.querySelector('.hero-arrow.next')?.addEventListener('click', () => { next(); restart(); });
+    root.querySelector('.hero-arrow.prev')?.addEventListener('click', () => { prev(); restart(); });
+    dots.forEach((d, idx) => d.addEventListener('click', () => { show(idx); restart(); }));
+
+    restart();
+  }
+</script>
