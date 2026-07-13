@@ -6,8 +6,7 @@ const featured = (await getCollection('listings'))
   .sort((a, b) => +b.data.listedDate - +a.data.listedDate)
   .slice(0, 3);
 import ListingCard from '../components/ListingCard.astro';
-// Hero collage hotlinked from Wix for preview; swap to /img/hero-home.png after curl (see BRAND-ASSETS.md).
-const HERO = 'https://static.wixstatic.com/media/c47812_143f0f24834348cb86d166bc37a157a2~mv2.png';
+const HERO = '/img/hero-home.png';
 ---
 <Base>
   <section class="hero">

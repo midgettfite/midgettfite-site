@@ -1,9 +1,7 @@
 ---
 interface Props { title?: string; description?: string }
 const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.' } = Astro.props;
-// NOTE: logo is hotlinked from Wix for immediate preview. Swap to /img/logo.jpg after running
-// the curl in BRAND-ASSETS.md, before Wix is decommissioned.
-const LOGO = 'https://static.wixstatic.com/media/c47812_d747b10ce57f471da302478456fd4d8c~mv2.jpg';
+const LOGO = '/img/logo.jpg';
 const nav = [
   { label: 'Home', href: '/' },
   { label: 'Residential for Sale', href: '/residential-property-for-sale' },
