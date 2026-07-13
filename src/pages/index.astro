@@ -30,19 +30,73 @@ import Base from '../layouts/Base.astro';
       <button type="button" class="dot" data-dot="2" aria-label="Slide 3"></button>
     </div>
   </section>
-  <section>
+  <section class="testimonials-home">
     <h2>What People Say About Us</h2>
     <div class="quotes-home">
-      <blockquote class="quote"><p>&ldquo;Dan is the man you want in your corner! His high level of knowledge and integrity were key for us while making such a major decision. We highly recommend them, especially to first-time buyers like ourselves.&rdquo;</p><cite>&mdash; Jason L.</cite></blockquote>
-      <blockquote class="quote"><p>&ldquo;Midgett &amp; Fite is a family-friendly real estate business whose employees deeply care for clients beyond what is being bought or sold. We will gladly choose to work with them again in the future.&rdquo;</p><cite>&mdash; Jennifer A.</cite></blockquote>
+      <div class="quote">
+        <img src="/img/review-jennifer.jpg" alt="Jennifer A." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Jennifer A.</a>
+        <p>&ldquo;Midgett &amp; Fite is a family-friendly real estate business whose employees deeply care for clients beyond what is being bought or sold. We have greatly enjoyed and benefited from working with Midgett &amp; Fite in the past and will gladly choose to work with them again in the future.&rdquo;</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-micah.jpg" alt="Micah M." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Micah M.</a>
+        <p>&ldquo;Thank you, Midgett &amp; Fite, for helping me buy my first house! Dan Midgett did a great job looking hard and finding something that would meet my needs, well within my budget&mdash; I'm really happy!&rdquo;</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-anna.jpg" alt="Anna S." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Anna S.</a>
+        <p>Midgett and Fite did a great job helping my husband and I find and purchase our very first home! They were very attentive to all the things that we wanted in a new home, and did a great job working within our time schedule and our budgeting needs. Midgett and Fite went above and beyond to help us even through some difficult time constraints and complications with the contract. I would definitely recommend them to anyone looking to buy or sell a home.</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-jason.jpg" alt="Jason L." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Jason L.</a>
+        <p>&ldquo;Dan is the man you want in your corner! His high level of knowledge and integrity were key for us while making such a major decision. Him and his entire team were honest and attentive to our unique circumstances, and we highly recommend them, especially to first-time buyers like ourselves. Thank you, Midgett &amp; Fite Real Estate!&rdquo;</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-matthew.jpg" alt="Matthew H." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Matthew H.</a>
+        <p>&ldquo;Great service! Dan helped me find the perfect property and took care of lots of things I wouldn't have thought about. He obviously knows the business inside and out and isn't afraid to be honest about things that might be of concern. I'd recommend him to anyone.&rdquo;</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-levi.jpg" alt="Levi H." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Levi H.</a>
+        <p>&ldquo;When my dad died, the house he left me was a huge mess. Dan worked with me and my brother on a complicated remodeling venture and got it done really fast and professionally and then turned around and sold it. Dan is so knowledgeable about the market and knew how to guide us every step of the way with all the problems we had with various potential buyers&hellip; he's also FAST. I really can't imagine having a better real estate agent. I can't recommend him enough.&rdquo;</p>
+      </div>
+      <div class="quote">
+        <img src="/img/review-heather.jpg" alt="Heather L." class="quote-avatar" />
+        <a href="/testimonials" class="quote-name">Heather L.</a>
+        <p>The sales team &ldquo;Family&rdquo; at Midgett and Fite were absolutely Phenomenal. They are very knowledgeable, friendly, and know the business backward and forwards. They relay any and all information in layman's terms so you can understand and make a sound decision on your purchase. They have been in the real estate business for years for a reason. They are honest, caring and want you to have a phenomenal experience.</p>
+      </div>
     </div>
-    <p><a href="/testimonials">Read more testimonials &rarr;</a></p>
+    <p class="more-link"><a href="/testimonials">Read more testimonials &rarr;</a></p>
   </section>
 
-  <section>
-    <h2>Get in Touch</h2>
-    <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
-    <p><strong>(615) 444-3136</strong> &nbsp;·&nbsp; <a href="/contact">Send us a message</a></p>
+  <section class="get-in-touch">
+    <div class="git-inner">
+      <h2>Get In Touch</h2>
+      <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
+
+      <div id="git-success" style="display:none;">Thanks! Your message was sent. We'll be in touch shortly.</div>
+
+      <form id="git-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="794ae01d-7123-4cca-aacf-af9b66c2ea37" />
+        <input type="hidden" name="subject" value="New homepage contact form submission — Midgett & Fite Real Estate" />
+        <input type="hidden" name="from_name" value="Midgett & Fite Website" />
+        <input type="hidden" name="redirect" value="false" />
+        <div class="git-row">
+          <input type="text" name="name" placeholder="Name *" required />
+          <input type="email" name="email" placeholder="Email *" required />
+        </div>
+        <input type="tel" name="phone" placeholder="Phone" />
+        <input type="text" name="address" placeholder="Address" />
+        <input type="text" name="subject_line" placeholder="Subject" />
+        <textarea name="message" placeholder="Message" rows="6"></textarea>
+        <button type="submit">Send</button>
+      </form>
+
+      <p class="git-phone"><a href="tel:+16154443136">(615) 444-3136</a></p>
+    </div>
   </section>
 
   <section class="resources">
@@ -74,13 +128,34 @@ import Base from '../layouts/Base.astro';
   .dot { width:8px; height:8px; border-radius:50%; border:none; background:rgba(255,255,255,.5); padding:0; cursor:pointer; }
   .dot.is-active { background:#fff; }
   @media (max-width:640px){ .slides{ aspect-ratio:4/3; } .hero-cta{ bottom:10%; } .cta-btn{ padding:8px 12px; font-size:.78rem; } }
-  .quotes-home { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:16px 0; }
-  .quote { margin:0; padding:16px 20px; border-left:4px solid #b0413e; background:#faf7f5; border-radius:6px; }
-  .quote p { margin:0 0 8px; }
-  .quote cite { color:#6b7280; font-style:normal; font-weight:600; }
+  .testimonials-home { text-align:center; }
+  .testimonials-home h2 { color:#e21c21; font-size:2.6rem; font-weight:300; letter-spacing:1px; margin-bottom:28px; }
+  .quotes-home { display:grid; grid-template-columns:repeat(4,1fr); gap:28px 20px; margin:16px 0; text-align:center; }
+  .quote { margin:0; display:flex; flex-direction:column; align-items:center; }
+  .quote-avatar { width:130px; height:130px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
+  .quote-name { color:#e2585c; text-decoration:underline; font-weight:600; margin-bottom:10px; }
+  .quote p { margin:0; font-size:.88rem; color:#4b5563; }
+  .more-link { text-align:center; margin-top:22px; }
+  @media (max-width:900px){ .quotes-home { grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .quotes-home { grid-template-columns:1fr; } }
+
+  .get-in-touch { margin:48px calc(50% - 50vw) 0; width:100vw; background:#aa0000; color:#f2f2f2; padding:48px 22px; }
+  .git-inner { max-width:620px; margin:0 auto; text-align:center; }
+  .get-in-touch h2 { text-transform:uppercase; font-weight:300; letter-spacing:2px; font-size:2.2rem; margin:0 0 16px; color:#f2f2f2; }
+  .get-in-touch p { color:#f2f2f2; }
+  .get-in-touch form { display:grid; gap:12px; margin:20px 0; text-align:left; }
+  .git-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .get-in-touch input, .get-in-touch textarea { background:#aa0000; border:1px solid rgba(255,255,255,.6); color:#fff; padding:10px 12px; font-size:.9rem; font-family:inherit; }
+  .get-in-touch input::placeholder, .get-in-touch textarea::placeholder { color:#f0c9c9; }
+  .get-in-touch button { background:#f2f2f2; color:#aa0000; border:none; padding:12px; font-weight:700; letter-spacing:.5px; cursor:pointer; }
+  .get-in-touch button:hover { background:#fff; }
+  .git-phone { margin-top:8px; }
+  .git-phone a { color:#f2f2f2; }
+  #git-success { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.5); padding:14px; margin:16px 0; }
+  @media (max-width:560px){ .git-row { grid-template-columns:1fr; } }
+
   .resources ul { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px 22px; }
   .resources a { font-size:.9rem; }
-  @media (max-width:560px){ .quotes-home { grid-template-columns:1fr; } }
 </style>
 <script>
   const root = document.getElementById('hero-slideshow');
@@ -108,4 +183,23 @@ import Base from '../layouts/Base.astro';
 
     restart();
   }
+
+  const gitForm = document.getElementById('git-form') as HTMLFormElement;
+  const gitSuccess = document.getElementById('git-success') as HTMLElement;
+  gitForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(gitForm);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+      const json = await res.json();
+      if (json.success) {
+        gitForm.style.display = 'none';
+        gitSuccess.style.display = 'block';
+      } else {
+        alert('Something went wrong. Please email us directly at midgettandfiteoffice@gmail.com.');
+      }
+    } catch {
+      alert('Something went wrong. Please email us directly at midgettandfiteoffice@gmail.com.');
+    }
+  });
 </script>
