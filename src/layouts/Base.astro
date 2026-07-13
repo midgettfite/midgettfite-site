@@ -4,18 +4,36 @@ const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Ho
 const LOGO = '/img/logo.jpg';
 const nav = [
   { label: 'Home', href: '/' },
-  { label: 'Residential for Sale', href: '/residential-property-for-sale' },
-  { label: 'Commercial for Sale', href: '/commercial-property-for-sale' },
-  { label: 'Land for Sale', href: '/land-for-sale' },
-  { label: 'Residential for Rent', href: '/residential-property-for-rent' },
-  { label: 'Commercial for Rent', href: '/commercial-property-for-rent' },
-  { label: 'Meet the Team', href: '/meet-the-team' },
-  { label: 'Our Company', href: '/company-history' },
-  { label: 'Services', href: '/property-management' },
+  { label: 'For Sale', children: [
+      { label: 'Residential Property For Sale', href: '/residential-property-for-sale' },
+      { label: 'Commercial Property For Sale', href: '/commercial-property-for-sale' },
+      { label: 'Land For Sale', href: '/land-for-sale' },
+  ]},
+  { label: 'For Rent', children: [
+      { label: 'Residential Property For Rent', href: '/residential-property-for-rent' },
+      { label: 'Commercial Property For Rent', href: '/commercial-property-for-rent' },
+  ]},
+  { label: 'About Us', children: [
+      { label: 'Meet the Team', href: '/meet-the-team' },
+      { label: 'Our Company', href: '/company-history' },
+  ]},
+  { label: 'Services', children: [
+      { label: 'Brokerage Service', href: '/brokerage-service' },
+      { label: 'Real Estate Investment', href: '/real-estate-investment' },
+      { label: 'Property Management', href: '/property-management' },
+  ]},
   { label: 'Payment Portal', href: '/payment-portal' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'More', children: [
+      { label: 'Contact Us', href: '/contact' },
+      { label: 'Helpful Forms', href: '/helpful-forms' },
+  ]},
 ];
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isActive(item: any) {
+  if (item.href) return currentPath === item.href.replace(/\/$/, '') || (item.href === '/' && currentPath === '/');
+  if (item.children) return item.children.some((c: any) => currentPath === c.href.replace(/\/$/, ''));
+  return false;
+}
 ---
 <!doctype html>
 <html lang="en">
@@ -41,7 +59,26 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
         </div>
       </div>
       <div class="wrap"><div class="phone">Give us a call today! <a href="tel:+16154443136">615-444-3136</a></div></div>
-      <nav><div class="wrap"><ul>{nav.map((n) => <li><a href={n.href} class={currentPath === n.href.replace(/\/$/, '') || (n.href === '/' && currentPath === '/') ? 'is-active' : ''}>{n.label}</a></li>)}</ul></div></nav>
+      <nav>
+        <div class="wrap">
+          <ul>
+            {nav.map((n) => (
+              <li class={n.children ? 'has-dropdown' : ''}>
+                {n.children ? (
+                  <>
+                    <span class={isActive(n) ? 'is-active' : ''}>{n.label}</span>
+                    <ul class="dropdown">
+                      {n.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+                    </ul>
+                  </>
+                ) : (
+                  <a href={n.href} class={isActive(n) ? 'is-active' : ''}>{n.label}</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
     </header>
     <main class="wrap"><slot /></main>
     <footer class="site-footer">
@@ -84,11 +121,18 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
       .socials a:hover { opacity:.85; }
       .phone { padding:4px 22px 14px; color:#e8e8e8; font-size:.95rem; }
       .phone a { color:#fff; text-decoration:none; font-weight:600; }
-      nav { border-top:2px solid var(--accent); background:var(--dark); }
-      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:4px; padding:0; margin:0; }
-      nav a { display:block; text-decoration:none; color:var(--accent); font-size:.85rem; font-weight:600; letter-spacing:.3px; padding:12px 16px; }
-      nav a.is-active { background:var(--accent); color:#fff; }
-      nav a:hover { color:#fff; }
+      nav { border-top:2px solid var(--accent); background:var(--dark); position:relative; z-index:10; }
+      nav > .wrap > ul { list-style:none; display:flex; flex-wrap:wrap; gap:4px; padding:0; margin:0; }
+      nav > .wrap > ul > li { position:relative; }
+      nav a, nav span { display:block; text-decoration:none; color:var(--accent); font-size:.85rem; font-weight:600; letter-spacing:.3px; padding:12px 16px; cursor:default; }
+      nav > .wrap > ul > li > a, nav > .wrap > ul > li > span { cursor:pointer; }
+      nav a.is-active, nav span.is-active { background:var(--accent); color:#fff; }
+      nav a:hover, nav > .wrap > ul > li > span:hover { color:#fff; }
+      .has-dropdown .dropdown { display:none; position:absolute; top:100%; left:0; min-width:220px; background:var(--dark); border:1px solid #444; flex-direction:column; z-index:20; }
+      .has-dropdown:hover .dropdown { display:flex; }
+      .dropdown li { width:100%; }
+      .dropdown a { padding:10px 16px; white-space:nowrap; }
+      .dropdown a:hover { background:var(--accent); color:#fff; }
 
       main { padding: 32px 22px 56px; min-height: 50vh; }
       h1 { margin-top:0; }
