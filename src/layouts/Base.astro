@@ -15,6 +15,7 @@ const nav = [
   { label: 'Payment Portal', href: '/payment-portal' },
   { label: 'Contact', href: '/contact' },
 ];
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <!doctype html>
 <html lang="en">
@@ -29,19 +30,18 @@ const nav = [
       <div class="wrap topbar">
         <a href="/" class="brand">
           <img src={LOGO} alt="Midgett & Fite Real Estate logo" class="logo" />
-          <span class="wordmark">MIDGETT &amp; FITE<small>REAL ESTATE</small></span>
+          <span class="wordmark">MIDGETT &amp; FITE REAL ESTATE</span>
         </a>
         <div class="top-right">
-          <div class="phone">Give us a call today! <a href="tel:+16154443136">(615) 444-3136</a></div>
           <div class="socials">
-            <a href="mailto:midgettandfiteoffice@gmail.com" aria-label="Email">Email</a>
-            <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener">Facebook</a>
-            <a href="https://twitter.com/MidgettandFite" target="_blank" rel="noopener">X</a>
-            <a href="https://maps.google.com/?cid=2622158749148926133" target="_blank" rel="noopener">Map</a>
+            <a href="mailto:midgettandfiteoffice@gmail.com" aria-label="Email" class="icon-email">&#9993;</a>
+            <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener" aria-label="Facebook" class="icon-fb">f</a>
+            <a href="https://maps.google.com/?cid=2622158749148926133" target="_blank" rel="noopener" aria-label="Map" class="icon-map">&#128205;</a>
           </div>
         </div>
       </div>
-      <nav><div class="wrap"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></div></nav>
+      <div class="wrap"><div class="phone">Give us a call today! <a href="tel:+16154443136">615-444-3136</a></div></div>
+      <nav><div class="wrap"><ul>{nav.map((n) => <li><a href={n.href} class={currentPath === n.href.replace(/\/$/, '') || (n.href === '/' && currentPath === '/') ? 'is-active' : ''}>{n.label}</a></li>)}</ul></div></nav>
     </header>
     <main class="wrap"><slot /></main>
     <footer class="site-footer">
@@ -71,20 +71,23 @@ const nav = [
 
       /* Header */
       .site-header { background:var(--dark); color:#fff; }
-      .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:14px 22px; }
-      .brand { display:flex; align-items:center; gap:14px; text-decoration:none; color:#fff; }
-      .brand .logo { height:58px; width:auto; display:block; }
-      .wordmark { display:flex; flex-direction:column; font-weight:300; font-size:1.5rem; letter-spacing:2px; line-height:1; }
-      .wordmark small { font-size:.7rem; letter-spacing:4px; margin-top:4px; color:#d6d6d6; }
-      .top-right { text-align:right; font-size:.85rem; }
-      .top-right .phone { color:#e8e8e8; }
-      .top-right .phone a { color:#fff; text-decoration:none; }
-      .socials { margin-top:6px; display:flex; gap:12px; justify-content:flex-end; }
-      .socials a { color:#c9c9c9; text-decoration:none; font-size:.8rem; }
-      .socials a:hover { color:#fff; }
-      nav { border-top:1px solid #3a3a3a; background:var(--dark); }
-      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:20px; padding:10px 0; margin:0; }
-      nav a { text-decoration:none; color:var(--accent); font-size:.85rem; font-weight:600; letter-spacing:.3px; }
+      .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:18px 22px 8px; }
+      .brand { display:flex; align-items:center; gap:20px; text-decoration:none; color:#fff; }
+      .brand .logo { height:90px; width:auto; display:block; }
+      .wordmark { font-weight:300; font-size:2.1rem; letter-spacing:1px; line-height:1; white-space:nowrap; }
+      .top-right { display:flex; align-items:center; }
+      .socials { display:flex; gap:10px; }
+      .socials a { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; text-decoration:none; font-size:1rem; color:#fff; }
+      .socials .icon-email { background:var(--accent); }
+      .socials .icon-fb { background:#1877f2; font-weight:700; font-family:Georgia, serif; }
+      .socials .icon-map { background:transparent; color:#fff; font-size:1.3rem; }
+      .socials a:hover { opacity:.85; }
+      .phone { padding:4px 22px 14px; color:#e8e8e8; font-size:.95rem; }
+      .phone a { color:#fff; text-decoration:none; font-weight:600; }
+      nav { border-top:2px solid var(--accent); background:var(--dark); }
+      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:4px; padding:0; margin:0; }
+      nav a { display:block; text-decoration:none; color:var(--accent); font-size:.85rem; font-weight:600; letter-spacing:.3px; padding:12px 16px; }
+      nav a.is-active { background:var(--accent); color:#fff; }
       nav a:hover { color:#fff; }
 
       main { padding: 32px 22px 56px; min-height: 50vh; }
@@ -110,7 +113,8 @@ const nav = [
       .foot-top { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
       .foot-links { display:flex; flex-direction:column; gap:4px; text-align:right; }
       .disclaimer { font-size:.72rem; color:#8a8f98; line-height:1.5; }
-      @media (max-width:640px){ .top-right{ text-align:left; } .socials{ justify-content:flex-start; } .foot-links{ text-align:left; } }
+      @media (max-width:640px){ .foot-links{ text-align:left; } }
+      @media (max-width:760px){ .brand .logo{ height:60px; } .wordmark{ font-size:1.3rem; white-space:normal; } }
     </style>
   </body>
 </html>
