@@ -1,0 +1,12 @@
+# SEO redirects: old Wix slugs -> new Astro pages
+# Cloudflare Pages reads this file automatically (no build step required).
+# Source: CONTENT-INVENTORY.md "URL slugs" section, captured 2026-07-12.
+
+# Old individual bio "copy" URLs -> Meet the Team page
+/dan-midgett              /meet-the-team   301
+/copy-of-dan-midgett      /meet-the-team   301
+/copy-2-of-dan-midgett-1  /meet-the-team   301
+/copy-2-of-dan-midgett    /meet-the-team   301
+
+# Old forms hub -> renamed page
+/forms                    /helpful-forms   301

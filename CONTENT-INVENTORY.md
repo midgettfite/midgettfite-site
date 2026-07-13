@@ -23,7 +23,7 @@ Old individual bio slugs (ugly Wix "copy" URLs — redirect to /meet-the-team or
 |---|---|---|---|
 | Dan Midgett | Principal Broker | Principal Broker | full bio below |
 | Jeneva Midgett | Property Management Specialist | Real Estate Agent / Property Management Specialist | |
-| Nate Midgett | Repair Manager | Office Assistant (bio) / Maintenance Manager (history) | **TITLE INCONSISTENT — confirm with Dan** |
+| Nate Midgett | Maintenance Manager | Maintenance Manager | **CONFIRMED by Dan 2026-07-12: Maintenance Manager** |
 | Jeanice Birch | Office Assistant | Office Assistant | |
 
 ### Bios
@@ -36,7 +36,7 @@ Jeneva has had a behind the scenes role in the operation of the company almost f
 **Jeanice Birch — Office Assistant**
 Jeanice joined the Midgett & Fite team in 2020. Her background in journalism and in customer service helps her serve our office, owners, tenants, and brokerage clients with knowledge and kindness.
 
-**Nate Midgett — Repair Manager**
+**Nate Midgett — Maintenance Manager**
 Nate joined Midgett & Fite in 2024. His varied background in the development, design, construction, and management of properties adds to the valuable service he offers to our clients.
 
 ## Company History (/company-history)

@@ -9,12 +9,42 @@ import Base from '../layouts/Base.astro';
     <strong>Email:</strong> <a href="mailto:midgettandfiteoffice@gmail.com">midgettandfiteoffice@gmail.com</a><br />
     <strong>Office:</strong> 312 South Maple Street, Lebanon, TN 37087
   </p>
-  <form name="contact" method="POST" data-static-form-name="contact" style="max-width:520px;display:grid;gap:12px;">
+
+  <div id="form-success" style="display:none;padding:16px;background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;color:#065f46;max-width:520px;margin-bottom:12px;">
+    Thanks! Your message was sent. We'll be in touch shortly.
+  </div>
+
+  <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" style="max-width:520px;display:grid;gap:12px;">
+    <!-- Web3Forms free tier (250/month). Get key at web3forms.com → enter midgettandfiteoffice@gmail.com → copy access key → replace value below. -->
+    <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_KEY" />
+    <input type="hidden" name="subject" value="New contact form submission — Midgett & Fite Real Estate" />
+    <input type="hidden" name="from_name" value="Midgett & Fite Website" />
+    <input type="hidden" name="redirect" value="false" />
     <input type="text" name="name" placeholder="Your name" required />
     <input type="email" name="email" placeholder="Your email" required />
     <input type="tel" name="phone" placeholder="Phone (optional)" />
     <textarea name="message" placeholder="How can we help?" rows="5" required></textarea>
-    <button type="submit">Send</button>
+    <button type="submit">Send Message</button>
   </form>
-  <p style="color:#6b7280;font-size:.85rem;margin-top:10px;">Form delivery to be wired at build (Cloudflare Pages Forms or a Worker &rarr; midgettandfiteoffice@gmail.com until Zoho email is live).</p>
 </Base>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const successBox = document.getElementById('form-success') as HTMLElement;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+      const json = await res.json();
+      if (json.success) {
+        form.style.display = 'none';
+        successBox.style.display = 'block';
+      } else {
+        alert('Something went wrong. Please email us directly at midgettandfiteoffice@gmail.com.');
+      }
+    } catch {
+      alert('Something went wrong. Please email us directly at midgettandfiteoffice@gmail.com.');
+    }
+  });
+</script>

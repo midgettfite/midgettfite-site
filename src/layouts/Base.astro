@@ -1,6 +1,9 @@
 ---
 interface Props { title?: string; description?: string }
 const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.' } = Astro.props;
+// NOTE: logo is hotlinked from Wix for immediate preview. Swap to /img/logo.jpg after running
+// the curl in BRAND-ASSETS.md, before Wix is decommissioned.
+const LOGO = 'https://static.wixstatic.com/media/c47812_d747b10ce57f471da302478456fd4d8c~mv2.jpg';
 const nav = [
   { label: 'Home', href: '/' },
   { label: 'Residential for Sale', href: '/residential-property-for-sale' },
@@ -25,46 +28,91 @@ const nav = [
   </head>
   <body>
     <header class="site-header">
-      <div class="wrap">
-        <a href="/" class="brand">MIDGETT &amp; FITE REAL ESTATE</a>
-        <div class="phone">Call today! (615) 444-3136</div>
+      <div class="wrap topbar">
+        <a href="/" class="brand">
+          <img src={LOGO} alt="Midgett & Fite Real Estate logo" class="logo" />
+          <span class="wordmark">MIDGETT &amp; FITE<small>REAL ESTATE</small></span>
+        </a>
+        <div class="top-right">
+          <div class="phone">Give us a call today! <a href="tel:+16154443136">(615) 444-3136</a></div>
+          <div class="socials">
+            <a href="mailto:midgettandfiteoffice@gmail.com" aria-label="Email">Email</a>
+            <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://twitter.com/MidgettandFite" target="_blank" rel="noopener">X</a>
+            <a href="https://maps.google.com/?cid=2622158749148926133" target="_blank" rel="noopener">Map</a>
+          </div>
+        </div>
       </div>
-      <nav class="wrap"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
+      <nav><div class="wrap"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></div></nav>
     </header>
     <main class="wrap"><slot /></main>
     <footer class="site-footer">
       <div class="wrap">
-        <p>(615) 444-3136 &nbsp;·&nbsp; 312 South Maple Street, Lebanon, TN 37087</p>
-        <p class="disclaimer">All information deemed reliable but not guaranteed and should be verified independently. All properties are subject to prior sale, change or withdrawal. Midgett &amp; Fite is an Equal Opportunity Employer and supports the Fair Housing Act.</p>
-        <p><a href="http://mail.midgettfite.com">Employee Login</a></p>
+        <div class="foot-top">
+          <div>
+            <strong>Midgett &amp; Fite Real Estate</strong><br />
+            312 South Maple Street, Lebanon, TN 37087<br />
+            <a href="tel:+16154443136">(615) 444-3136</a> &nbsp;·&nbsp;
+            <a href="mailto:midgettandfiteoffice@gmail.com">midgettandfiteoffice@gmail.com</a>
+          </div>
+          <div class="foot-links">
+            <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://twitter.com/MidgettandFite" target="_blank" rel="noopener">X / Twitter</a>
+            <a href="http://mail.midgettfite.com">Employee Login</a>
+          </div>
+        </div>
+        <p class="disclaimer">All information deemed reliable but not guaranteed and should be verified independently. All properties are subject to prior sale, change or withdrawal. Neither listing broker(s) nor Midgett &amp; Fite shall be responsible for any typographical errors, misinformation, or misprints and shall be held totally harmless. Midgett &amp; Fite makes no warranty or representation regarding the validity or accuracy of information contained herein or in any hyperlink to another site. The Laws of Tennessee will govern for any litigation that may arise in relation to or in use of this website. Midgett &amp; Fite is an Equal Opportunity Employer and supports the Fair Housing Act.</p>
       </div>
     </footer>
     <style is:global>
-      :root { --ink:#1f2933; --muted:#6b7280; --accent:#0b5; --line:#e5e7eb; }
+      :root { --ink:#22272e; --muted:#6b7280; --accent:#b0413e; --accent-dark:#8f3230; --dark:#2b2b2b; --line:#e5e7eb; }
       * { box-sizing: border-box; }
-      body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); line-height:1.5; }
-      .wrap { max-width: 1080px; margin:0 auto; padding: 0 20px; }
-      .site-header { border-bottom:1px solid var(--line); padding:14px 0; }
-      .site-header .wrap { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
-      .brand { font-weight:700; letter-spacing:.5px; text-decoration:none; color:var(--ink); }
-      .phone { color:var(--muted); font-size:.9rem; }
-      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:14px; padding:10px 0 0; margin:0; }
-      nav a { text-decoration:none; color:var(--ink); font-size:.86rem; }
-      nav a:hover { color:var(--accent); }
-      main { padding: 28px 20px 48px; min-height: 50vh; }
+      body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); line-height:1.6; background:#fff; }
+      .wrap { max-width: 1120px; margin:0 auto; padding: 0 22px; }
+      a { color:var(--accent); }
+
+      /* Header */
+      .site-header { background:var(--dark); color:#fff; }
+      .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding:14px 22px; }
+      .brand { display:flex; align-items:center; gap:14px; text-decoration:none; color:#fff; }
+      .brand .logo { height:58px; width:auto; display:block; }
+      .wordmark { display:flex; flex-direction:column; font-weight:300; font-size:1.5rem; letter-spacing:2px; line-height:1; }
+      .wordmark small { font-size:.7rem; letter-spacing:4px; margin-top:4px; color:#d6d6d6; }
+      .top-right { text-align:right; font-size:.85rem; }
+      .top-right .phone { color:#e8e8e8; }
+      .top-right .phone a { color:#fff; text-decoration:none; }
+      .socials { margin-top:6px; display:flex; gap:12px; justify-content:flex-end; }
+      .socials a { color:#c9c9c9; text-decoration:none; font-size:.8rem; }
+      .socials a:hover { color:#fff; }
+      nav { border-top:1px solid #3a3a3a; background:var(--dark); }
+      nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:20px; padding:10px 0; margin:0; }
+      nav a { text-decoration:none; color:var(--accent); font-size:.85rem; font-weight:600; letter-spacing:.3px; }
+      nav a:hover { color:#fff; }
+
+      main { padding: 32px 22px 56px; min-height: 50vh; }
       h1 { margin-top:0; }
-      .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
-      .card { display:block; border:1px solid var(--line); border-radius:10px; overflow:hidden; text-decoration:none; color:inherit; }
+      h1, h2 { color:#1f242b; }
+      blockquote { margin:0; }
+
+      /* Listing grid + cards */
+      .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px; }
+      .card { display:block; border:1px solid var(--line); border-radius:10px; overflow:hidden; text-decoration:none; color:inherit; background:#fff; transition:box-shadow .15s, transform .15s; }
+      .card:hover { box-shadow:0 6px 20px rgba(0,0,0,.08); transform:translateY(-2px); }
       .card .thumb { aspect-ratio:4/3; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
       .card .thumb img { width:100%; height:100%; object-fit:cover; }
       .card .noimg { color:var(--muted); font-size:.85rem; }
       .card .body { padding:12px 14px; }
-      .price { font-size:1.15rem; font-weight:700; }
+      .price { font-size:1.15rem; font-weight:700; color:var(--accent); }
       .addr { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
       .specs { display:flex; gap:12px; font-size:.85rem; color:var(--ink); }
       .badge { display:inline-block; background:#fde68a; color:#92400e; font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-bottom:6px; }
-      .site-footer { border-top:1px solid var(--line); padding:24px 0; margin-top:40px; font-size:.85rem; color:var(--muted); }
-      .disclaimer { font-size:.75rem; }
+
+      /* Footer */
+      .site-footer { border-top:4px solid var(--accent); background:#f7f5f4; padding:28px 0; margin-top:48px; font-size:.85rem; color:#4b5563; }
+      .foot-top { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+      .foot-links { display:flex; flex-direction:column; gap:4px; text-align:right; }
+      .disclaimer { font-size:.72rem; color:#8a8f98; line-height:1.5; }
+      @media (max-width:640px){ .top-right{ text-align:left; } .socials{ justify-content:flex-start; } .foot-links{ text-align:left; } }
     </style>
   </body>
 </html>

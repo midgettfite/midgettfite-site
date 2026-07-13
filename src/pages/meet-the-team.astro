@@ -1,24 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
+// Headshots hotlinked from Wix for preview; swap to /img/team-*.jpg after curl (see BRAND-ASSETS.md).
+const M = 'https://static.wixstatic.com/media/';
 const team = [
   {
     name: 'Dan Midgett',
     title: 'Principal Broker',
+    photo: M + 'c47812_00826beafbd5432188b25e6606709fa3~mv2.jpg',
     bio: `Dan E. Midgett, II is a full service real estate broker serving residential and commercial clients, and is the Managing Owner of Midgett & Fite. He strives to provide top-level service to his clients and to treat everyone with respect. Dan is an award-winning real estate broker serving Wilson and surrounding counties, including the Nashville MSA. He has achieved the Gold Award of Excellence multiple times, culminating in the Gold Life Award. Dan received his CCIM designation in 2008 and is a certified negotiation expert. Dan's list of commercial clients includes Southern Baptist Theological Seminary, AAA Self-Storage, and Farm Bureau Insurance Company, among others. Dan co-brokered finding a site for Publix in Lebanon and continues to help many local businesses and individuals achieve their real estate dreams. Whether you are relocating your business or buying your first home, Dan can help.`,
   },
   {
     name: 'Jeneva Midgett',
     title: 'Real Estate Agent / Property Management Specialist',
+    photo: M + 'c47812_0ff99edd3c6f4ada8dfc46bcdcefc1d0~mv2.jpg',
     bio: `Jeneva has had a behind-the-scenes role in the operation of the company almost from its beginning. She obtained her real estate license in 2016 and is now the specialist for all of the property management needs of Midgett & Fite.`,
   },
   {
     name: 'Nate Midgett',
-    title: 'Repair Manager',
+    title: 'Maintenance Manager',
+    photo: M + 'c47812_2cd9edbe967c4c1b977a1dde63c5d58e~mv2.jpg',
     bio: `Nate joined Midgett & Fite in 2024. His varied background in the development, design, construction, and management of properties adds to the valuable service he offers to our clients.`,
   },
   {
     name: 'Jeanice Birch',
     title: 'Office Assistant',
+    photo: M + 'c47812_d10438244e2643a1bf6e2027d71071c0~mv2.jpg',
     bio: `Jeanice joined the Midgett & Fite team in 2020. Her background in journalism and in customer service helps her serve our office, owners, tenants, and brokerage clients with knowledge and kindness.`,
   },
 ];
@@ -28,7 +34,7 @@ const team = [
   <div class="team">
     {team.map((m) => (
       <article class="member">
-        <div class="avatar"><span>Photo</span></div>
+        <img class="avatar" src={m.photo} alt={m.name} />
         <div>
           <h2>{m.name}</h2>
           <p class="role">{m.title}</p>
@@ -40,9 +46,9 @@ const team = [
 </Base>
 <style>
   .team { display:grid; gap:28px; margin-top:20px; }
-  .member { display:grid; grid-template-columns:120px 1fr; gap:20px; align-items:start; }
+  .member { display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; }
   .member h2 { margin:0 0 2px; }
-  .member .role { color:#6b7280; font-weight:600; margin:0 0 8px; }
-  .avatar { width:120px; height:120px; border-radius:50%; background:#f3f4f6; display:flex; align-items:center; justify-content:center; color:#9ca3af; font-size:.8rem; }
-  @media (max-width:560px){ .member { grid-template-columns:1fr; } }
+  .member .role { color:#b0413e; font-weight:600; margin:0 0 8px; }
+  .avatar { width:150px; height:150px; border-radius:50%; object-fit:cover; border:3px solid #b0413e; }
+  @media (max-width:560px){ .member { grid-template-columns:1fr; justify-items:center; text-align:center; } }
 </style>

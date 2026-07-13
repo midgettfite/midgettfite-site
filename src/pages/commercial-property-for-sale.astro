@@ -11,4 +11,18 @@ const listings = (await getCollection('listings'))
   {listings.length === 0
     ? <p>No current listings in this category. Please check back soon or call (615) 444-3136.</p>
     : <div class="grid">{listings.map((l) => <ListingCard l={l} />)}</div>}
+
+  <section class="resources">
+    <h2>Other Resources We Recommend</h2>
+    <ul>
+      <li><a href="http://www.costar.com/" target="_blank" rel="noopener">CoStar Group</a></li>
+      <li><a href="http://www.loopnet.com/" target="_blank" rel="noopener">LoopNet</a></li>
+      <li><a href="http://www.ccim.com/" target="_blank" rel="noopener">CCIM</a></li>
+    </ul>
+  </section>
 </Base>
+<style>
+  .resources { margin-top:32px; }
+  .resources ul { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px 22px; }
+  .resources a { font-size:.9rem; }
+</style>

@@ -6,9 +6,14 @@ const featured = (await getCollection('listings'))
   .sort((a, b) => +b.data.listedDate - +a.data.listedDate)
   .slice(0, 3);
 import ListingCard from '../components/ListingCard.astro';
+// Hero collage hotlinked from Wix for preview; swap to /img/hero-home.png after curl (see BRAND-ASSETS.md).
+const HERO = 'https://static.wixstatic.com/media/c47812_143f0f24834348cb86d166bc37a157a2~mv2.png';
 ---
 <Base>
-  <section>
+  <section class="hero">
+    <img src={HERO} alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
+  </section>
+  <section class="intro">
     <h1>Fulfilling your real estate dreams in Middle Tennessee.</h1>
     <p>Midgett &amp; Fite Real Estate is a family-focused firm serving Wilson County and Greater Nashville with brokerage, property management, and real estate investment services. Give us a call today at <strong>(615) 444-3136</strong>.</p>
   </section>
@@ -36,16 +41,19 @@ import ListingCard from '../components/ListingCard.astro';
   <section class="resources">
     <h2>Other Real Estate Resources</h2>
     <ul>
-      <li><a href="https://www.hud.gov/program_offices/fair_housing_equal_opp" target="_blank" rel="noopener">Equal Housing</a></li>
-      <li><a href="https://www.realtor.org" target="_blank" rel="noopener">Realtor.org</a></li>
-      <li><a href="https://www.tarnet.com" target="_blank" rel="noopener">TARNET.COM</a></li>
-      <li><a href="https://www.tn.gov/commerce" target="_blank" rel="noopener">TN Dept. of Commerce &amp; Insurance</a></li>
-      <li><a href="https://www.lebanonwilsonchamber.com" target="_blank" rel="noopener">Lebanon Wilson Co. Chamber of Commerce</a></li>
-      <li><a href="https://www.emtar.com" target="_blank" rel="noopener">Eastern Middle TN Association of Realtors</a></li>
+      <li><a href="http://www.realtor.org/programs/fair-housing-program" target="_blank" rel="noopener">Equal Housing</a></li>
+      <li><a href="https://www.nar.realtor/" target="_blank" rel="noopener">Realtor.org</a></li>
+      <li><a href="http://www.tarnet.com/" target="_blank" rel="noopener">TARNET.COM</a></li>
+      <li><a href="https://www.tn.gov/commerce/" target="_blank" rel="noopener">TN Dept. of Commerce &amp; Insurance</a></li>
+      <li><a href="https://www.lebanonwilsonchamber.com/" target="_blank" rel="noopener">Lebanon Wilson Co. Chamber of Commerce</a></li>
+      <li><a href="http://emtar.com/" target="_blank" rel="noopener">Eastern Middle TN Association of Realtors</a></li>
     </ul>
   </section>
 </Base>
 <style>
+  .hero { margin:0 0 8px; }
+  .hero img { width:100%; height:auto; border-radius:10px; display:block; }
+  .intro { text-align:center; max-width:760px; margin:0 auto 8px; }
   .quotes-home { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:16px 0; }
   .quote { margin:0; padding:16px 20px; border-left:4px solid #b0413e; background:#faf7f5; border-radius:6px; }
   .quote p { margin:0 0 8px; }
