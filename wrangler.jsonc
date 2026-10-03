@@ -1,0 +1,9 @@
+// Cloudflare Workers static-assets deploy (M&F's Cloudflare account, Workers Builds from GitHub).
+// `npm run build` writes the static site to dist/; Cloudflare serves it as-is. public/_redirects still applies.
+{
+  "name": "midgettfite-site",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}
