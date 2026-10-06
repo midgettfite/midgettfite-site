@@ -25,18 +25,22 @@ content:
       - name: status
         label: Status
         type: select
-        options: { values: [active, pending, sold-leased] }
+        options:
+          values:
+            - { label: Available,        value: active }
+            - { label: Under Contract,   value: pending }
+            - { label: Sold or Leased,   value: sold-leased }
         default: active
       - { name: price, label: Price ($), type: number }
       - { name: priceUpdated, label: "Show 'Price Update!' badge", type: boolean, default: false }
-      - { name: address, label: Address, type: string }
+      - { name: address, label: "Street Address (with St, Rd, Ave...)", type: string }
       - { name: city,  label: City,  type: string, default: Lebanon }
       - { name: state, label: State, type: string, default: TN }
       - { name: zip,   label: ZIP,   type: string, required: false }
       - { name: beds,  label: Bedrooms,   type: number, required: false }
       - { name: baths, label: Bathrooms,  type: number, required: false }
       - { name: sqft,  label: Square Feet, type: number, required: false }
-      - { name: photos, label: Photos, type: image, options: { media: images, multiple: true } }
+      - { name: photos, label: "Photos (the first one is the cover)", type: image, options: { media: images, multiple: true } }
       - { name: videoUrl, label: Video Tour Link, type: string, required: false }
       - { name: infoUrl, label: Property Information Link (RealTracs), type: string, required: false }
       - { name: description, label: Description, type: text }
