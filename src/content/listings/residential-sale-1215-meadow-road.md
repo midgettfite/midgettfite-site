@@ -48,6 +48,7 @@ photos:
   - "/uploads/residential-sale-1215-meadow-road/34.jpg"
   - "/uploads/residential-sale-1215-meadow-road/35.jpg"
 videoUrl: ""
+infoUrl: "https://go.realtracs.com/1g61O8W"
 description: "Remodeled and ready for your family! Large mature trees, wonderful landscaping. New roof and decking, fire pit, large deck — great for entertaining! Come and see!"
 listedDate: 2026-06-01
 ---

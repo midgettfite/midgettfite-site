@@ -21,6 +21,7 @@ const listings = defineCollection({
     sqft: z.number().optional(),
     photos: z.array(z.string()).default([]),
     videoUrl: z.string().url().or(z.literal('')).optional(),
+    infoUrl: z.string().url().or(z.literal('')).optional(),
     description: z.string(),
     listedDate: z.coerce.date(),
   }),

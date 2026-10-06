@@ -40,5 +40,6 @@ const { Content } = await render(l);
   <Content />
 
   {d.videoUrl && <p><a href={d.videoUrl}>Watch the video tour &rarr;</a></p>}
+  {d.infoUrl && <p><a href={d.infoUrl} target="_blank" rel="noopener">Property Information &rarr;</a></p>}
   <p><a href="/contact">Contact us about this property</a> or call (615) 444-3136.</p>
 </Base>

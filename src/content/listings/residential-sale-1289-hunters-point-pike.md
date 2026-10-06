@@ -28,6 +28,7 @@ photos:
   - "/uploads/residential-sale-1289-hunters-point-pike/14.jpg"
   - "/uploads/residential-sale-1289-hunters-point-pike/15.jpg"
 videoUrl: ""
+infoUrl: "https://go.realtracs.com/1gcdN30"
 description: "Great home on an oversized corner lot! Near shopping and downtown Lebanon. New septic, new survey includes the full 3/4 acre corner lot! Come and see!"
 listedDate: 2026-06-10
 ---

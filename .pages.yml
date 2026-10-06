@@ -38,5 +38,6 @@ content:
       - { name: sqft,  label: Square Feet, type: number, required: false }
       - { name: photos, label: Photos, type: image, options: { media: images, multiple: true } }
       - { name: videoUrl, label: Video Tour Link, type: string, required: false }
+      - { name: infoUrl, label: Property Information Link (RealTracs), type: string, required: false }
       - { name: description, label: Description, type: text }
       - { name: listedDate, label: Date Listed, type: date }

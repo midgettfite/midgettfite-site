@@ -28,6 +28,7 @@ photos:
   - "/uploads/commercial-sale-1289-hunters-point-pike/14.jpg"
   - "/uploads/commercial-sale-1289-hunters-point-pike/15.jpg"
 videoUrl: ""
+infoUrl: "https://go.realtracs.com/1gcdN30"
 description: "Great home with commercial potential on an oversized corner lot! Next door to Dollar General and near downtown Lebanon. New septic, new survey includes the full 3/4 acre corner lot! Come and see!"
 listedDate: 2026-06-10
 ---

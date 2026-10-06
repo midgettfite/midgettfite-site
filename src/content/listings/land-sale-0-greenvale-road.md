@@ -26,6 +26,7 @@ photos:
   - "/uploads/land-sale-0-greenvale-road/15.jpg"
   - "/uploads/land-sale-0-greenvale-road/16.jpg"
 videoUrl: ""
+infoUrl: "https://go.realtracs.com/1cuS30a"
 description: "Wonderfully wooded homestead — 10 acres goes up the hill. Cabin on the property is falling down, but might be salvaged. Electric available, water down the street. Owner was making an off-grid homestead on the property but was unable to complete it. Maybe your dreams can come true here! GREAT OPPORTUNITY!"
 listedDate: 2026-05-15
 ---

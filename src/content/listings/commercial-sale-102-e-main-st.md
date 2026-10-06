@@ -11,6 +11,7 @@ zip: "37087"
 sqft: 3793
 photos: []
 videoUrl: ""
+infoUrl: "https://go.realtracs.com/0gXUoCh"
 description: "Join in Lebanon's redevelopment! This space is currently arranged as office space (multiple offices, 2 bathrooms) and was the former office of Attorney Jerry Hunt, but could be retail or mixed use. Great location with lots of renovation and activity around this hot location."
 listedDate: 2025-10-01
 ---
