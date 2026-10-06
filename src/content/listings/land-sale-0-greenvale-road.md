@@ -2,7 +2,7 @@
 title: "0 Greenvale Road"
 category: land-sale
 status: active
-price: 154000
+price: 149000
 priceUpdated: true
 address: "0 Greenvale Road"
 city: Lebanon

@@ -1,9 +1,9 @@
 ---
 title: "645 Longtail Ln."
 category: residential-rent
-status: active
-price: 1990
-priceUpdated: true
+status: sold-leased
+price: 0
+priceUpdated: false
 address: "645 Longtail Ln."
 city: Lebanon
 state: TN

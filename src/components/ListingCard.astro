@@ -14,6 +14,7 @@ const soldLabel = isRent ? 'LEASED!' : 'SOLD!';
     {soldLeased
       ? <span class="badge sold">{soldLabel}</span>
       : (<>
+          {d.status === 'pending' && <span class="badge sold">UNDER CONTRACT!</span>}
           {d.priceUpdated && <span class="badge">Price Update!</span>}
           {d.price > 0 && <div class="price">{money(d.price)}{isRent ? '/mo' : ''}</div>}
         </>)}

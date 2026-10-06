@@ -21,6 +21,7 @@ const { Content } = await render(l);
   {soldLeased
     ? <p><span class="badge" style="background:#b0413e;color:#fff;">{soldLabel}</span></p>
     : (<>
+        {d.status === 'pending' && <span class="badge" style="background:#b0413e;color:#fff;">UNDER CONTRACT!</span>}
         {d.priceUpdated && <span class="badge">Price Update!</span>}
         {d.price > 0 && <p class="price">{money(d.price)}{isRent ? '/mo' : ''}</p>}
       </>)}

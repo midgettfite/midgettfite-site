@@ -1,7 +1,7 @@
 ---
 title: "215 Robertson Lane"
 category: residential-sale
-status: active
+status: pending
 price: 175000
 priceUpdated: false
 address: "215 Robertson Lane"
@@ -35,7 +35,7 @@ photos:
   - "/uploads/residential-sale-215-robertson-lane/21.jpg"
   - "/uploads/residential-sale-215-robertson-lane/22.jpg"
   - "/uploads/residential-sale-215-robertson-lane/23.jpg"
-videoUrl: ""
+videoUrl: "https://www.youtube.com/playlist?list=PLDHa5svFAxdPnR00ZNLEMiBiz_A9nZBYd"
 description: "This historic home is on 3.01 acres on a quiet, no-through street of other large properties. Property can be purchased AS-IS, but could be a gem with a little love! Tenant damaged the home, so it needs some tender love and care. Come and see!"
 listedDate: 2026-05-20
 ---
