@@ -23,7 +23,7 @@ export const GET: APIRoute = async () => {
       sqft: d.sqft ?? null,
       description: d.description,
       page: `/property/${id}`,
-      photo: d.photos.length ? `/thumbs/${id}.jpg` : null,
+      emailPhotos: d.photos.slice(0, 3).map((_, i) => `/thumbs/${id}/${i + 1}.jpg`),
       photos: d.photos,
     }));
   return new Response(JSON.stringify({ version: 1, generated: new Date().toISOString(), listings }, null, 1), {
