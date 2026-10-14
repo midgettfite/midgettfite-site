@@ -9,7 +9,7 @@ This is the migration source of truth for text content. Photos tracked separatel
 - Address: **312 South Maple Street, Lebanon, TN 37087**
 - Facebook: https://www.facebook.com/midgettandfite/
 - Google Maps (CID): https://maps.google.com/?cid=2622158749148926133
-- Employee Login target: http://mail.midgettfite.com
+- Employee Email target: https://mail.zoho.com (Zoho webmail since the 10/01 cutover; was http://mail.midgettfite.com, the old server)
 - Tagline: BUY-SELL-RENT-INVEST
 - Payment portal external URL (QuickClick): **https://quickclick.com/r/igdkjqhwsmovqxfosodb7aj9texnbm** — 3.45% convenience fee
 - Copyright: ©2016 Midgett & Fite
