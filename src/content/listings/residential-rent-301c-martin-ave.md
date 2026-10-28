@@ -2,7 +2,7 @@
 title: "301C Martin Ave"
 category: residential-rent
 status: active
-price: 1300
+price: 1200
 priceUpdated: true
 address: "301C Martin Ave"
 city: Lebanon

@@ -2,7 +2,7 @@
 title: "209 Burdock St"
 category: residential-rent
 status: active
-price: 1350
+price: 1300
 priceUpdated: false
 address: "209 Burdock St"
 city: Lebanon

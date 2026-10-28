@@ -1,7 +1,7 @@
 ---
 title: "1215 Meadow Road"
 category: residential-sale
-status: active
+status: pending
 price: 327400
 priceUpdated: false
 address: "1215 Meadow Road"

@@ -2,7 +2,7 @@
 title: "462 South College St"
 category: residential-rent
 status: active
-price: 1500
+price: 1400
 priceUpdated: false
 address: "462 South College St"
 city: Lebanon
