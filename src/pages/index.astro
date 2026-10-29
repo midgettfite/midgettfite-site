@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
   <section class="hero" id="hero-slideshow">
     <div class="slides">
       <div class="slide is-active" data-slide="0">
-        <img src="/img/hero-home.png" alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
+        <img class="fit-whole" src="/img/hero-home.png" alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
       </div>
       <div class="slide" data-slide="1">
         <img src="/img/hero-residential.jpg" alt="Residential real estate in Middle Tennessee" />
@@ -127,7 +127,8 @@ import Base from '../layouts/Base.astro';
   .hero-dots { position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center; gap:8px; z-index:2; }
   .dot { width:8px; height:8px; border-radius:50%; border:none; background:rgba(255,255,255,.5); padding:0; cursor:pointer; }
   .dot.is-active { background:#fff; }
-  @media (max-width:640px){ .slides{ aspect-ratio:4/3; } .hero-cta{ bottom:10%; } .cta-btn{ padding:8px 12px; font-size:.78rem; } }
+  /* The team banner is a wide panorama; cropping it to the phone box cuts off faces and the address. */
+  @media (max-width:640px){ .slides{ aspect-ratio:4/3; } .slide img.fit-whole{ object-fit:contain; } .hero-cta{ bottom:10%; } .cta-btn{ padding:8px 12px; font-size:.78rem; } }
   .testimonials-home { text-align:center; }
   .testimonials-home h2 { color:#e21c21; font-size:2.6rem; font-weight:300; letter-spacing:1px; margin-bottom:28px; }
   .quotes-home { display:grid; grid-template-columns:repeat(4,1fr); gap:28px 20px; margin:16px 0; text-align:center; }
