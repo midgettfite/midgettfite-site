@@ -102,6 +102,14 @@
     };
 
     let key = store.get('mf_upload_key'), who = store.get('mf_upload_who');
+    // Personal link: /add-photos#k=<passcode>&who=<name>. Staff just tap it; nothing to type.
+    // The part after # never leaves the phone (not sent to the server or logged).
+    const fromLink = new URLSearchParams(location.hash.slice(1));
+    if (fromLink.get('k')) {
+      key = fromLink.get('k'); store.set('mf_upload_key', key);
+      if (fromLink.get('who')) { who = fromLink.get('who'); store.set('mf_upload_who', who); }
+      history.replaceState(null, '', location.pathname);
+    }
     let listings = [], current = null;
     // tiles: { id, path?(existing) , preview?, state:'ok'|'shrinking'|'uploading'|'done'|'error', sha?, err? }
     let tiles = [], nextId = 1;
