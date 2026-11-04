@@ -1,9 +1,15 @@
 // Cloudflare Workers static-assets deploy (M&F's Cloudflare account, Workers Builds from GitHub).
 // `npm run build` writes the static site to dist/; Cloudflare serves it as-is. public/_redirects still applies.
+// worker/index.js runs ONLY for /api/* (the staff Add Photos page); every other request goes
+// straight to the static files without touching the Worker.
+// Secrets it needs (set in the Cloudflare dashboard, never in this file): GITHUB_TOKEN, UPLOAD_KEY.
 {
   "name": "midgettfite-site",
   "compatibility_date": "2026-10-01",
+  "main": "./worker/index.js",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
   }
 }
