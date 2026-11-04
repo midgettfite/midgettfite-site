@@ -25,9 +25,7 @@ photos:
   - /uploads/residential-rent-209-burdock-st/11.jpg
   - /uploads/residential-rent-209-burdock-st/12.jpg
   - /uploads/residential-rent-209-burdock-st/13.jpg
-description: Enjoy comfortable living in the two-bedroom, one-bath house in a
-  quiet residential area. This home features several recent updates including
-  updated windows, flooring, and HVAC, providing modern comfort and efficiency.
-  Call 615-444-3136 to schedule a showing. Come and see!
+description: |-
+  Enjoy comfortable living in the two-bedroom, one-bath house in a quiet residential area. This home features several recent updates including updated windows, flooring, and HVAC, providing modern comfort and efficiency. Call 615-444-3136 to schedule a showing. Come and see! Test
 listedDate: 2026-10-06
 ---
