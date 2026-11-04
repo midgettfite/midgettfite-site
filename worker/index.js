@@ -10,6 +10,8 @@
 //                        big photo costs this Worker no CPU time.
 //   POST /api/save       ONE commit: the new photos + the listing's new photo list
 //                        + deletion of photos removed from the listing's own folder.
+//   POST /api/create     ONE commit: a new listing file + its photos (the office portal's
+//                        Create listing page, which Jasper helps fill in).
 //
 // Why one commit: Pages CMS saves every photo as its own commit. Several at once
 // race each other on GitHub, so some fail and retries leave -1/-2/-3 copies.
@@ -17,7 +19,7 @@
 // Secrets (Cloudflare dashboard -> Worker -> Settings -> Variables and Secrets):
 //   GITHUB_TOKEN  fine-grained token, this repo only, Contents: read and write
 //   UPLOAD_KEY    the staff passcode
-import { parseDocument } from 'yaml';
+import { Document, parseDocument } from 'yaml';
 
 const REPO = 'midgettfite/midgettfite-site';
 const apiBase = (env) => env.GITHUB_API || 'https://api.github.com'; // override only for local testing
@@ -42,6 +44,7 @@ export default {
       if (url.pathname === '/api/listings' && request.method === 'GET') return json(await listListings(gh));
       if (url.pathname === '/api/blob' && request.method === 'POST') return await createBlob(request, env);
       if (url.pathname === '/api/save' && request.method === 'POST') return json(await save(gh, await request.json()));
+      if (url.pathname === '/api/create' && request.method === 'POST') return json(await create(gh, await request.json()));
       return json({ error: 'Not found' }, 404);
     } catch (err) {
       return json({ error: err.message || String(err) }, err.status || 500);
@@ -253,4 +256,113 @@ async function commitOnce(gh, { file, slug, by, stamp, photos }) {
   const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [head.sha] }) });
   await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
   return { ok: true, commit: commit.sha, photos: finalPhotos, added, removed: removed.length, deleted };
+}
+
+// ---- new listing ----------------------------------------------------------
+
+const CATEGORIES = ['residential-sale', 'commercial-sale', 'land-sale', 'residential-rent', 'commercial-rent'];
+
+export function slugify(s) {
+  return String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+}
+
+const line = (v, max) => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+function number(v, label, { required = false } = {}) {
+  if (v === '' || v == null) {
+    if (required) throw new HttpError(400, `Please fill in the ${label}.`);
+    return undefined;
+  }
+  const n = Number(String(v).replace(/[$,\s]/g, ''));
+  if (!Number.isFinite(n) || n < 0) throw new HttpError(400, `The ${label} should be a number.`);
+  return n;
+}
+
+/** The listing's front matter, checked against the site's schema (src/content.config.ts), in the schema's order. */
+export function listingData(input, today) {
+  const i = input || {};
+  const address = line(i.address, 120);
+  if (!address) throw new HttpError(400, 'Please fill in the address.');
+  const category = String(i.category || '');
+  if (!CATEGORIES.includes(category)) throw new HttpError(400, 'Please choose what kind of listing it is.');
+  const price = number(i.price, 'price', { required: true });
+  if (!price) throw new HttpError(400, 'Please fill in the price.');
+  const description = String(i.description ?? '').replace(/\r\n?/g, '\n').trim().slice(0, 5000);
+  if (!description) throw new HttpError(400, 'Please write a description.');
+  const zip = line(i.zip, 10);
+  if (zip && !/^\d{5}$/.test(zip)) throw new HttpError(400, 'The zip code should be 5 digits.');
+  const data = {
+    title: line(i.title, 120) || address,
+    category,
+    status: 'active',
+    price,
+    priceUpdated: false,
+    address,
+    city: line(i.city, 60) || 'Lebanon',
+    state: (line(i.state, 2) || 'TN').toUpperCase(),
+  };
+  if (zip) data.zip = zip;
+  for (const [k, label] of [['beds', 'number of bedrooms'], ['baths', 'number of bathrooms'], ['sqft', 'square feet']]) {
+    const n = number(i[k], label);
+    if (n !== undefined) data[k] = n;
+  }
+  data.description = description;
+  data.listedDate = today;
+  return data;
+}
+
+export function listingMarkdown(data, photos) {
+  const doc = new Document({ ...data, ...(photos.length ? { photos } : {}) });
+  doc.get('description', true).type = 'BLOCK_LITERAL';
+  return `---\n${doc.toString({ lineWidth: 0 }).replace(/\n+$/, '')}\n---\n`;
+}
+
+const chicagoDate = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago' }).format(new Date());
+
+/**
+ * body = {
+ *   listing: { title, category, price, address, city, state, zip, beds, baths, sqft, description },
+ *   photos:  [ { sha }, ... ]   (already uploaded with /api/blob, in order; the first is the cover)
+ *   by:      "Jeanice" (optional, for the commit message)
+ * }
+ */
+export async function create(gh, body) {
+  const data = listingData(body?.listing, chicagoDate());
+  const photos = Array.isArray(body?.photos) ? body.photos : [];
+  if (photos.length > MAX_PHOTOS) throw new HttpError(400, `Up to ${MAX_PHOTOS} photos per listing.`);
+  if (!photos.every((p) => p && SHA.test(p.sha))) throw new HttpError(400, 'Bad photo entry.');
+  const slug = `${data.category}-${slugify(data.address)}`;
+  const by = String(body?.by || '').replace(/[^\w .'-]/g, '').slice(0, 40);
+  const stamp = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await createOnce(gh, { data, slug, by, stamp, photos });
+    } catch (err) {
+      if (err.status !== 409 || err.final || attempt >= 2) throw err;
+    }
+  }
+}
+
+async function createOnce(gh, { data, slug, by, stamp, photos }) {
+  const ref = await gh(`/git/ref/heads/${BRANCH}`);
+  const head = await gh(`/git/commits/${ref.object.sha}`);
+  const tree = await gh(`/git/trees/${head.tree.sha}?recursive=1`);
+  const mdPath = `${LISTINGS_DIR}/${slug}.md`;
+  if (tree.tree.some((t) => t.path.toLowerCase() === mdPath)) {
+    const err = new HttpError(409, 'There is already a listing for that address. To change its photos, use "Change photos" instead.');
+    err.final = true;
+    throw err;
+  }
+  const entries = [];
+  const paths = photos.map((p, i) => {
+    const name = `${stamp}-${String(i + 1).padStart(2, '0')}.jpg`;
+    entries.push({ path: `${UPLOADS_DIR}/${slug}/${name}`, mode: '100644', type: 'blob', sha: p.sha });
+    return `/uploads/${slug}/${name}`;
+  });
+  entries.push({ path: mdPath, mode: '100644', type: 'blob', content: listingMarkdown(data, paths) });
+  const n = paths.length;
+  const message = `New listing: ${data.title}${n ? ` with ${n} photo${n === 1 ? '' : 's'}` : ''} (office portal${by ? `, ${by}` : ''})`;
+  const newTree = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: head.tree.sha, tree: entries }) });
+  const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [head.sha] }) });
+  await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
+  return { ok: true, commit: commit.sha, file: `${slug}.md`, url: `/property/${slug}/`, photos: paths };
 }
