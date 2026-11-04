@@ -1,7 +1,7 @@
-// Add Photos (staff tool) — the server half.
+// The website's staff API, used only by the office portal (Create listing and Change photos tiles, MF-205).
 //
 // Everything except /api/* is the static site, served from dist/ as before.
-// /api/* lets staff add, reorder and remove a listing's photos from a phone:
+// /api/* lets the portal add listings and add, reorder and remove a listing's photos:
 //
 //   GET  /api/listings   every listing (from GitHub, so a listing saved a minute
 //                        ago in Pages CMS is already here) with its photos
@@ -18,7 +18,7 @@
 //
 // Secrets (Cloudflare dashboard -> Worker -> Settings -> Variables and Secrets):
 //   GITHUB_TOKEN  fine-grained token, this repo only, Contents: read and write
-//   UPLOAD_KEY    the staff passcode
+//   UPLOAD_KEY    the portal's key; lives on the office box too, staff never see it
 import { Document, parseDocument } from 'yaml';
 
 const REPO = 'midgettfite/midgettfite-site';
@@ -250,7 +250,7 @@ async function commitOnce(gh, { file, slug, by, stamp, photos }) {
   if (added) parts.push(`add ${added}`);
   if (removed.length) parts.push(`remove ${removed.length}`);
   if (!added && !removed.length) parts.push('reorder');
-  const message = `Photos for ${file.replace(/\.md$/, '')}: ${parts.join(', ')} (Add Photos page${by ? `, ${by}` : ''})`;
+  const message = `Photos for ${file.replace(/\.md$/, '')}: ${parts.join(', ')} (office portal${by ? `, ${by}` : ''})`;
 
   const newTree = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: head.tree.sha, tree: entries }) });
   const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [head.sha] }) });
