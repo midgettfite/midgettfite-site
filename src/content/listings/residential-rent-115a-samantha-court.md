@@ -16,7 +16,28 @@ description: >+
 
 listedDate: 2026-11-03
 photos:
-  - /uploads/residential-rent-115a-samantha-court/20261104145135-01.jpg
-  - /uploads/residential-rent-115a-samantha-court/20261104145135-02.jpg
-  - /uploads/residential-rent-115a-samantha-court/20261104145135-03.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-01.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-02.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-03.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-04.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-05.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-06.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-07.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-08.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-09.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-10.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-11.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-12.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-13.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-14.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-15.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-16.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-17.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-18.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-19.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-20.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-21.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-22.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-23.jpg
+  - /uploads/residential-rent-115a-samantha-court/20261104161953-24.jpg
 ---
