@@ -12,6 +12,8 @@
 //                        + deletion of photos removed from the listing's own folder.
 //   POST /api/create     ONE commit: a new listing file + its photos (the office portal's
 //                        Create listing page, which Jasper helps fill in).
+//   POST /api/update     ONE commit: a listing's details (Edit listing, MF-237). Its photos are left alone.
+//   POST /api/remove     ONE commit: takes a listing off the website. Its photos stay in the repo.
 //
 // Why one commit: Pages CMS saves every photo as its own commit. Several at once
 // race each other on GitHub, so some fail and retries leave -1/-2/-3 copies.
@@ -45,6 +47,8 @@ export default {
       if (url.pathname === '/api/blob' && request.method === 'POST') return await createBlob(request, env);
       if (url.pathname === '/api/save' && request.method === 'POST') return json(await save(gh, await request.json()));
       if (url.pathname === '/api/create' && request.method === 'POST') return json(await create(gh, await request.json()));
+      if (url.pathname === '/api/update' && request.method === 'POST') return json(await update(gh, await request.json()));
+      if (url.pathname === '/api/remove' && request.method === 'POST') return json(await remove(gh, await request.json()));
       return json({ error: 'Not found' }, 404);
     } catch (err) {
       return json({ error: err.message || String(err) }, err.status || 500);
@@ -136,6 +140,8 @@ async function listListings(gh) {
       status: doc.status || 'active',
       category: doc.category || '',
       photos: readPhotos(md),
+      sha: f.sha,          // Edit listing sends this back, so a change made in between is noticed
+      fields: editableFields(doc),
     };
   }));
   const order = { active: 0, pending: 1, 'sold-leased': 2 };
@@ -365,4 +371,105 @@ async function createOnce(gh, { data, slug, by, stamp, photos }) {
   const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [head.sha] }) });
   await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
   return { ok: true, commit: commit.sha, file: `${slug}.md`, url: `/property/${slug}/`, photos: paths };
+}
+
+// ---- edit a listing (MF-237) ------------------------------------------------
+
+const STATUSES = ['active', 'pending', 'sold-leased'];
+const EDITABLE = ['title', 'category', 'status', 'price', 'priceUpdated', 'address', 'city', 'state', 'zip', 'beds', 'baths', 'sqft', 'videoUrl', 'infoUrl', 'description'];
+
+export function editableFields(doc) {
+  return Object.fromEntries(EDITABLE.map((k) => [k, doc[k] ?? '']));
+}
+
+function link(v, label) {
+  const s = line(v, 500);
+  if (s && !/^https?:\/\/\S+$/i.test(s)) throw new HttpError(400, `The ${label} should be a full web address (https://...).`);
+  return s;
+}
+
+/** The listing file with these details changed. Everything else (photos, date listed, order of the lines) stays. */
+export function writeDetails(md, input) {
+  const { front, body } = splitFrontmatter(md);
+  const doc = parseDocument(front);
+  const old = doc.toJSON() || {};
+  const i = input || {};
+  const status = String(i.status || old.status || 'active');
+  if (!STATUSES.includes(status)) throw new HttpError(400, 'Please choose a status.');
+  const data = listingData(i, old.listedDate);   // the same checks a new listing gets
+  const set = {
+    ...data,
+    status,
+    priceUpdated: i.priceUpdated === true,
+    videoUrl: link(i.videoUrl, 'video tour link'),
+    infoUrl: link(i.infoUrl, 'property information link'),
+  };
+  delete set.listedDate;
+  for (const k of ['zip', 'beds', 'baths', 'sqft', 'videoUrl', 'infoUrl']) {
+    if (set[k] === undefined || set[k] === '') { doc.delete(k); delete set[k]; }
+  }
+  for (const [k, v] of Object.entries(set)) doc.set(k, v);
+  doc.get('description', true).type = 'BLOCK_LITERAL';
+  return `---\n${doc.toString({ lineWidth: 0 }).replace(/\n+$/, '')}\n---\n${body}`;
+}
+
+const CHANGED = 'Someone else changed this listing since you opened it. Reload the page to see their change.';
+
+/** Current listing file, refusing if it changed since the page read it. */
+async function openListing(gh, file, sha) {
+  if (!SAFE_FILE.test(file)) throw new HttpError(400, 'Bad listing name.');
+  const ref = await gh(`/git/ref/heads/${BRANCH}`);
+  const head = await gh(`/git/commits/${ref.object.sha}`);
+  const tree = await gh(`/git/trees/${head.tree.sha}?recursive=1`);
+  const mdPath = `${LISTINGS_DIR}/${file}`;
+  const entry = tree.tree.find((t) => t.path === mdPath);
+  if (!entry) { const e = new HttpError(404, 'That listing no longer exists. Reload the page.'); e.final = true; throw e; }
+  if (entry.sha !== sha) { const e = new HttpError(409, CHANGED); e.final = true; throw e; }
+  return { head, mdPath, md: b64decodeUtf8((await gh(`/git/blobs/${entry.sha}`)).content) };
+}
+
+async function commitTo(gh, head, entries, message) {
+  const newTree = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: head.tree.sha, tree: entries }) });
+  const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [head.sha] }) });
+  await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
+  return commit.sha;
+}
+
+async function retrying(once) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await once();
+    } catch (err) {
+      if (err.status !== 409 || err.final || attempt >= 2) throw err;
+    }
+  }
+}
+
+const signedBy = (body) => {
+  const by = String(body?.by || '').replace(/[^\w .'-]/g, '').slice(0, 40);
+  return `office portal${by ? `, ${by}` : ''}`;
+};
+
+/** body = { file, sha (from /api/listings), listing: { the details, as on the form }, by } */
+export async function update(gh, body) {
+  const file = String(body?.file || '');
+  return retrying(async () => {
+    const { head, mdPath, md } = await openListing(gh, file, String(body?.sha || ''));
+    const content = writeDetails(md, body?.listing);
+    if (content === md) return { ok: true, unchanged: true };
+    const commit = await commitTo(gh, head, [{ path: mdPath, mode: '100644', type: 'blob', content }],
+      `Edit listing ${file.replace(/\.md$/, '')} (${signedBy(body)})`);
+    return { ok: true, commit };
+  });
+}
+
+/** body = { file, sha, by }. The listing file goes; its photos stay, so a mistake can be put back from git history. */
+export async function remove(gh, body) {
+  const file = String(body?.file || '');
+  return retrying(async () => {
+    const { head, mdPath } = await openListing(gh, file, String(body?.sha || ''));
+    const commit = await commitTo(gh, head, [{ path: mdPath, mode: '100644', type: 'blob', sha: null }],
+      `Take listing off the website: ${file.replace(/\.md$/, '')} (${signedBy(body)})`);
+    return { ok: true, commit };
+  });
 }
