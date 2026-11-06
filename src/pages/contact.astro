@@ -21,6 +21,8 @@ import Base from '../layouts/Base.astro';
     <input type="hidden" name="subject" value="New contact form submission — Midgett & Fite Real Estate" />
     <input type="hidden" name="from_name" value="Midgett & Fite Website" />
     <input type="hidden" name="redirect" value="false" />
+    <!-- Spam trap (Web3Forms honeypot): hidden from people, so only a bot ticks it. -->
+    <input type="checkbox" name="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off" />
     <input type="text" name="name" placeholder="Your name" required />
     <input type="email" name="email" placeholder="Your email" required />
     <input type="tel" name="phone" placeholder="Phone (optional)" />
