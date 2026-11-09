@@ -1,0 +1,9 @@
+{
+  // mf-privacy: see worker.js header. FBF account only because the midgettfite.com zone is still there.
+  "name": "mf-privacy",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "account_id": "acdfd12f5dd794c440fdaa7105e9b981",
+  "workers_dev": false,
+  "routes": [{ "pattern": "privacy.midgettfite.com", "custom_domain": true }]
+}
