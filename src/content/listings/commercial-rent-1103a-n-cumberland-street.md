@@ -17,8 +17,10 @@ photos:
   - /uploads/1103a-n-cumberland/03.jpg
   - /uploads/1103a-n-cumberland/04.jpg
   - /uploads/1103a-n-cumberland/05.jpg
-  - /uploads/1103a-n-cumberland/06.jpg
-  - /uploads/1103a-n-cumberland/07.jpg
+  - /uploads/1103a-n-cumberland/19.jpg
+  - /uploads/1103a-n-cumberland/20.jpg
+  - /uploads/1103a-n-cumberland/22.jpg
+  - /uploads/1103a-n-cumberland/24.jpg
   - /uploads/1103a-n-cumberland/08.jpg
   - /uploads/1103a-n-cumberland/09.jpg
   - /uploads/1103a-n-cumberland/10.jpg
