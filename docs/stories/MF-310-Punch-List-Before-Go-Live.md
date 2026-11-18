@@ -34,11 +34,13 @@ messages land now that the office is on Zoho. Wix has kept changing since; the n
 |---|---|
 | Keep the look as built (it matches Wix), or freshen it before go-live? | **Keep it as built.** Go live first; freshen later if you want. |
 | Which mailbox should contact-form messages go to? | **The office's main Zoho mailbox.** |
-| Sold and leased listings: keep them on the site marked SOLD / LEASED, or remove them? | **Keep them marked** for 90 days, then remove. |
+| Sold and leased listings: keep them on the site marked SOLD / LEASED, or remove them? | **Decided 2026-11-18 (Dan):** remove them automatically, but only when the site still looks full after the removal. The exact rule is still open (see Status). |
 | Is the 3.45% convenience fee on the payment page still right? | No default; please confirm. |
 
 ## Status
 DRAFT, 2026-10-03.
+
+**2026-11-18, Dan (call with Steve):** sold and leased listings come down automatically, but there has to be logic so the site never looks bare. Still open: the age at which they come down and the minimum number of listings to keep showing.
 
 **2026-10-23:** privacy policy page added (Dan's 10/19 text, for the texting registration). Live now at
 https://privacy.midgettfite.com (Worker `mf-privacy`, `website/privacy-worker/`), and on the new site at `/privacy`

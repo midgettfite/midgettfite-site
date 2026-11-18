@@ -1,7 +1,7 @@
 # Website — Wix → Midgett & Fite's own site
 
-The new website, as user stories: the work already done since July, for the record, and the work left before
-midgettfite.com switches over. Each story says what it is, how we'll know it's done, and what's yours to decide.
+The new website, as user stories: the work already done since July, for the record, and the work left now that
+midgettfite.com has switched over (before 2026-11-18). Each story says what it is, how we'll know it's done, and what's yours to decide.
 
 ## The stories
 
@@ -25,7 +25,7 @@ midgettfite.com switches over. Each story says what it is, how we'll know it's d
 |---|---|---|---|
 | Punch list before go-live (MF-310) | Listings refreshed against today's Wix; contact form to Zoho; payment link; forms; video links; page-by-page check; Dan's OK | DRAFT | Look as built or freshen; contact-form mailbox; keep sold/leased listings; 3.45% fee |
 | Staff editor invites (MF-311) | Email invitations to the listings editor, no GitHub accounts | DRAFT | Who; when; publish directly or checked first |
-| Go live at midgettfite.com, then retire Wix (MF-312) | Point the domain at the new site, verify email and Ivy, overlap, cancel Wix | DRAFT | Date; the old Wix domain; overlap length; who has the Wix login |
+| Go live at midgettfite.com, then retire Wix (MF-312) | **Live — cut over before 11/18.** Left: close-out checks (email, Ivy, form, payment link); the old domain (Wix-registered to 2027-10-10, already redirecting to midgettfite.com). Wix is prepaid 3 yrs, not refundable, so it isn't cancelled — it lapses | LIVE, close-out open | Renew, transfer or drop `investment-property-management-tn.com` before 2027-10-10 |
 | Listings feed for Ivy (MF-313) | The site publishes listings as structured data; Ivy's property emails read it instead of the Wix page | DRAFT | Which list wins on price; rentals only; photos per email |
 | Office training (MF-314) | Each person adds, edits, marks leased and deletes a test listing; one-page cheat sheet | DRAFT | In person or screen-share; who; who owns listings after go-live |
 | Staff-editable pages (MF-315) | Team, testimonials, office details and home page become forms in the editor, like listings; design stays with Steve | DRAFT | Which forms; Company History too; who may edit; team photo style |
@@ -39,10 +39,10 @@ recommended default. When he answers, the box gets a DECISION line (his words, d
 
 ## Build order
 1. **Punch list** (MF-310) → Dan's OK on the preview.
-2. **Listings feed for Ivy** (MF-313) — must be live and proven **before** Wix goes off, or Ivy's property
-   emails lose their photos and descriptions.
+2. **Listings feed for Ivy** (MF-313) — must be live and proven **before** Wix goes off (now: before the prepaid
+   Wix term ends), or Ivy's property emails lose their photos and descriptions.
 3. **Editor invites + training** (MF-311, MF-314) — together, same day, so staff can keep listings current
    from the first day.
-4. **Go live** (MF-312) — also waits on the DNS moving into M&F's Cloudflare (account move plan Stage 5, after
-   Phase 2 closes plus a clean week), because the site now lives in M&F's account.
-5. Wix cancelled after the overlap.
+4. **Go live** (MF-312) — **done before 2026-11-18** (Dan, 11/18): midgettfite.com is on the new site. Close-out
+   checks and the old `investment-property-management-tn.com` domain remain.
+5. ~~Wix cancelled after the overlap~~ — not happening: prepaid three years, no refund; it lapses at term end.
