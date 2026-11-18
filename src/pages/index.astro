@@ -94,6 +94,8 @@ import Base from '../layouts/Base.astro';
         <input type="text" name="address" placeholder="Address" />
         <input type="text" name="subject_line" placeholder="Subject" />
         <textarea name="message" placeholder="Message" rows="6"></textarea>
+        <!-- SMS opt-in (10DLC, TCR C2TBBDC): never pre-ticked, never required. Wording matches /text-messages. -->
+        <label class="sms-optin"><input type="checkbox" name="sms_consent" value="Yes, OK to text" /> <span>Yes, Midgett &amp; Fite Realty may text me at this number when a rental opens up. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Not required to send this message or to rent from us. See our <a href="/text-messages">text message terms</a> and <a href="/privacy">privacy policy</a>.</span></label>
         <button type="submit">Send</button>
       </form>
 
@@ -152,6 +154,9 @@ import Base from '../layouts/Base.astro';
   .get-in-touch input::placeholder, .get-in-touch textarea::placeholder { color:#f0c9c9; }
   .get-in-touch button { background:#f2f2f2; color:#aa0000; border:none; padding:12px; font-weight:700; letter-spacing:.5px; cursor:pointer; }
   .get-in-touch button:hover { background:#fff; }
+  .get-in-touch .sms-optin { display:flex; gap:8px; align-items:flex-start; text-align:left; font-size:.78rem; line-height:1.4; color:#f2f2f2; }
+  .get-in-touch .sms-optin input { width:auto; padding:0; margin:3px 0 0; flex:none; }
+  .get-in-touch .sms-optin a { color:#fff; text-decoration:underline; }
   .git-phone { margin-top:8px; }
   .git-phone a { color:#f2f2f2; }
   #git-success { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.5); padding:14px; margin:16px 0; }
