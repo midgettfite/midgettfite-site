@@ -2,7 +2,7 @@
 title: 1103A N Cumberland Street
 category: commercial-rent
 status: active
-price: 1500
+price: 1950
 priceUpdated: false
 address: 1103A N Cumberland Street
 city: Lebanon
