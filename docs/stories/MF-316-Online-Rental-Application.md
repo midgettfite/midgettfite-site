@@ -46,3 +46,10 @@ improvement and automate our application process."
 
 ## Status
 DRAFT, 2026-11-20. In the backlog for Dan to rank.
+
+**2026-11-20, call with Dan:** medium-high priority, after the CRM. "Who puts money down on something they haven't seen?"
+- A required checkbox: **"Have you seen this property in person with one of our agents?"** Without it, the form says a
+  showing comes first and doesn't take the application. Driving by doesn't count.
+- Where possible, checked against the showing records, so a ticked box alone isn't enough.
+- A check that the applicant is a person (Cloudflare's), since bots fill in applications.
+- Jeneva has particular ideas for it and reviews the form before it goes live.
