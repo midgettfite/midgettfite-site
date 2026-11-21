@@ -1,6 +1,6 @@
 ---
-interface Props { title?: string; description?: string }
-const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.' } = Astro.props;
+interface Props { title?: string; description?: string; noindex?: boolean }
+const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.', noindex = false } = Astro.props;
 const LOGO = '/img/logo.jpg';
 const nav = [
   { label: 'Home', href: '/' },
@@ -42,6 +42,7 @@ function isActive(item: any) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
   </head>
   <body>
     <header class="site-header">
