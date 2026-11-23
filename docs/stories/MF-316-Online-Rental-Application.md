@@ -55,6 +55,12 @@ DRAFT, 2026-11-20. In the backlog for Dan to rank.
 - A check that the applicant is a person (Cloudflare's), since bots fill in applications.
 - Jeneva has particular ideas for it and reviews the form before it goes live.
 
+**2026-11-21, draft form built (scout, branch `scout/online-application`).** The paper application turned into a web form at
+`/apply-draft`. It's not linked from the site and not indexed, and it turns applications away until it's switched on. It has the
+seen-in-person checkbox and Cloudflare's person check, and it doesn't ask for an SSN, date of birth, driver's license number, or
+occupants' relationships and birthdates. Every question, why it's there, and 10 open questions:
+`MF-316-Application-Form-Summary-DRAFT-2026-11-21.md`. Next: Jeneva and Dan review it.
+
 **2026-11-23, what's holding it up.** Dan has ranked it and decided the seen-in-person rule (above). The rest waits on three things:
 1. **Jeneva and Dan haven't seen the draft yet.** The draft form and its one-page summary (11/21) are on the website's
    PR #4, not on the board, and nobody has been asked about them. Its 10 questions boil down to Jeneva's wording points
