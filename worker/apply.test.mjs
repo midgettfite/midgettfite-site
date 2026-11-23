@@ -1,7 +1,7 @@
 // The online rental application (MF-316). Run: npm test
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { FIELDS, applicationEmail, handleApply, validate } from './apply.js';
+import { FIELDS, applicationForJasper, handleApply, validate } from './apply.js';
 import worker from './index.js';
 
 const GOOD = {
@@ -59,46 +59,90 @@ test('the form asks nothing about protected classes or ID numbers', () => {
   }
 });
 
-test('the email lists every answer and says the showing is not yet checked', () => {
-  const { subject, text } = applicationEmail(validate(GOOD), new Date('2026-11-21T15:00:00Z'));
-  assert.equal(subject, 'Rental application: 115A Samantha Court, Mt Juliet');
-  assert.match(text, /Full legal name: Pat Example/);
-  assert.match(text, /Past employer: -/);
-  assert.match(text, /not yet checked against the showing records/);
-  assert.match(text, /Nov 21, 2026, 9:00/);
+test('what Jasper receives: every answer in order, labelled, and nothing else', () => {
+  const p = applicationForJasper(validate({ ...GOOD, ssn: '123-45-6789' }), new Date('2026-11-21T15:00:00Z'), 'id-1');
+  assert.equal(p.kind, 'mf-316-application');
+  assert.equal(p.id, 'id-1');
+  assert.equal(p.received_at, '2026-11-21T15:00:00.000Z');
+  assert.equal(p.property, '115A Samantha Court, Mt Juliet');
+  assert.deepEqual(p.answers.find((x) => x.name === 'full_name'), { name: 'full_name', label: 'Full legal name', value: 'Pat Example' });
+  assert.equal(p.answers.find((x) => x.name === 'past_employer').value, '');
+  assert.equal(p.answers.length, FIELDS.length - 2); // the two must-be-yes ticks are implied
+  assert.doesNotMatch(JSON.stringify(p), /ssn|123-45-6789/);
 });
 
+const JASPER = 'https://jasper-box.midgettfite.com/portal/applications';
 function env(over = {}) {
-  const sent = [];
-  return { sent, APPLY_ENABLED: 'true', TURNSTILE_SECRET: 's', APPLY_EMAIL: { send: async (m) => sent.push(m) }, ...over };
+  return { APPLY_ENABLED: 'true', TURNSTILE_SECRET: 's', JASPER_APPLY_URL: JASPER,
+    JASPER_ACCESS_CLIENT_ID: 'cid', JASPER_ACCESS_CLIENT_SECRET: 'csec', ...over };
 }
 const req = (o) => new Request('https://midgettfite.com/api/apply', { method: 'POST', body: form(o) });
-const turnstile = (success) => async (url, init) => {
-  assert.equal(url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
-  assert.equal(init.body.get('response'), 'tok');
-  return new Response(JSON.stringify({ success }));
-};
+// A pretend internet: Turnstile answers `person`, Jasper answers `jasper` (a Response, or a function that throws).
+function net({ person = true, jasper = () => Response.json({ ok: true, id: 'j1' }) } = {}) {
+  const toJasper = [];
+  const fetchImpl = async (url, init) => {
+    if (url === 'https://challenges.cloudflare.com/turnstile/v0/siteverify') {
+      assert.equal(init.body.get('response'), 'tok');
+      return Response.json({ success: person });
+    }
+    assert.equal(url, JASPER);
+    toJasper.push(init);
+    return jasper();
+  };
+  return { fetchImpl, toJasper };
+}
+const signed = { ...GOOD, 'cf-turnstile-response': 'tok' };
 
 test('applications are turned away until APPLY_ENABLED is "true"', async () => {
-  const e = env({ APPLY_ENABLED: undefined });
-  await assert.rejects(handleApply(req({ ...GOOD, 'cf-turnstile-response': 'tok' }), e, turnstile(true)), /aren't open yet/);
-  assert.equal(e.sent.length, 0);
+  const n = net();
+  await assert.rejects(handleApply(req(signed), env({ APPLY_ENABLED: undefined }), n.fetchImpl), /aren't open yet/);
+  assert.equal(n.toJasper.length, 0);
+});
+
+test('without Jasper\'s address and token, nothing is taken (fails closed)', async () => {
+  for (const k of ['JASPER_APPLY_URL', 'JASPER_ACCESS_CLIENT_ID', 'JASPER_ACCESS_CLIENT_SECRET', 'TURNSTILE_SECRET']) {
+    const n = net();
+    await assert.rejects(handleApply(req(signed), env({ [k]: undefined }), n.fetchImpl), /not set up yet/, k);
+    assert.equal(n.toJasper.length, 0);
+  }
+  const n = net();
+  await assert.rejects(handleApply(req(signed), env({ JASPER_APPLY_URL: 'http://jasper-box.midgettfite.com/x' }), n.fetchImpl), /not set up yet/);
+  assert.equal(n.toJasper.length, 0);
 });
 
 test('a failed or missing person check sends nothing', async () => {
-  const e = env();
-  await assert.rejects(handleApply(req({ ...GOOD, 'cf-turnstile-response': 'tok' }), e, turnstile(false)), /a person/);
-  await assert.rejects(handleApply(req(GOOD), e, turnstile(true)), /a person/);
-  assert.equal(e.sent.length, 0);
+  const n = net({ person: false });
+  await assert.rejects(handleApply(req(signed), env(), n.fetchImpl), /a person/);
+  const m = net();
+  await assert.rejects(handleApply(req(GOOD), env(), m.fetchImpl), /a person/);
+  assert.equal(n.toJasper.length + m.toJasper.length, 0);
 });
 
-test('a good application is emailed to the office, replying to the applicant', async () => {
-  const e = env();
-  assert.deepEqual(await handleApply(req({ ...GOOD, 'cf-turnstile-response': 'tok' }), e, turnstile(true)), { ok: true });
-  assert.equal(e.sent.length, 1);
-  assert.equal(e.sent[0].to, 'office@midgettfite.com');
-  assert.equal(e.sent[0].replyTo, 'pat@example.com');
-  assert.doesNotMatch(e.sent[0].text, /cf-turnstile/);
+test('a good application goes to Jasper with the website\'s service token', async () => {
+  const n = net();
+  assert.deepEqual(await handleApply(req(signed), env(), n.fetchImpl), { ok: true });
+  assert.equal(n.toJasper.length, 1);
+  const sent = n.toJasper[0];
+  assert.equal(sent.method, 'POST');
+  assert.equal(sent.headers['CF-Access-Client-Id'], 'cid');
+  assert.equal(sent.headers['CF-Access-Client-Secret'], 'csec');
+  assert.equal(sent.redirect, 'manual');
+  const body = JSON.parse(sent.body);
+  assert.equal(body.kind, 'mf-316-application');
+  assert.doesNotMatch(sent.body, /cf-turnstile|tok/);
+});
+
+test('the applicant hears "sent" only when Jasper says it has the application', async () => {
+  const bad = [
+    () => new Response('no', { status: 500 }),
+    () => new Response(null, { status: 302, headers: { location: 'https://midgettfite.cloudflareaccess.com/' } }),
+    () => new Response('<html>sign in</html>', { status: 200 }),
+    () => Response.json({ ok: false }),
+    () => { throw new TypeError('network down'); },
+  ];
+  for (const jasper of bad) {
+    await assert.rejects(handleApply(req(signed), env(), net({ jasper }).fetchImpl), /couldn't send your application/);
+  }
 });
 
 test('/api/apply needs no portal passcode, and the passcode routes still do', async () => {

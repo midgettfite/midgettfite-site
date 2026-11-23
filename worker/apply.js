@@ -3,28 +3,29 @@
 //   POST /api/apply   the form at /apply-draft (not linked from the site, not indexed)
 //
 // Public: unlike the rest of /api/*, it needs no portal passcode. Instead it checks, in order:
-//   1. APPLY_ENABLED is "true". Until the office approves the form, it isn't, and every application is turned
-//      away with "not open yet", even if this code is deployed.
-//   2. Cloudflare Turnstile says a person sent it (TURNSTILE_SECRET), checked here on the server, since the
+//   1. APPLY_ENABLED is "true". It stays unset until Jasper can take applications and the office has approved the
+//      form, so every application is turned away with "not open yet", even if this code is deployed.
+//   2. Jasper's address and service token are set (below). If not, nothing is taken: there is nowhere else to send it.
+//   3. Cloudflare Turnstile says a person sent it (TURNSTILE_SECRET), checked here on the server, since the
 //      widget alone can be skipped by a bot posting straight to this address.
-//   3. "I have seen this property in person with one of your agents" is ticked. Without it, no application.
-//   4. Only the fields on the approved form are kept (FIELDS below). Anything else is dropped, so a Social
+//   4. "I have seen this property in person with one of your agents" is ticked. Without it, no application.
+//   5. Only the fields on the approved form are kept (FIELDS below). Anything else is dropped, so a Social
 //      Security number, date of birth or card number can't come in under some other name, and free text that
 //      looks like a Social Security number is turned away with a message.
-// Then it emails the application to the office (APPLY_EMAIL, a Cloudflare Email Service send binding).
+// Then it hands the application to Jasper (Steve's decision, 11/23): a JSON POST to the office box, through
+// Cloudflare Access with the website's own service token, the way Ivy reaches the box. Jasper stores it, checks the
+// showing against the Callback List, and emails the office that one has arrived, with no personal details in the
+// email. The applicant is told it went through only when Jasper says it has it. Nothing is stored here and
+// nothing is emailed from here.
 //
-// Not in this draft, on purpose (see docs/stories/MF-316-Application-Form-Summary-DRAFT-2026-11-21.md):
-//   - nothing is stored, and nothing is sent to Jasper. The story wants the application in Jasper with a
-//     detail-free email; this draft emails the details instead, until that's built.
-//   - no check against the showing records (Jasper's Callback List appointments, MF-247).
-//   - no pay stub uploads, no $300, no SSN or date of birth (SmartMove asks for those on its own site).
+// The Jasper side is written up in the jasper repo: docs/MF-316-Applications-Receive.md.
 //
 // Settings (Cloudflare dashboard -> Worker -> Settings -> Variables and Secrets), set on beacon only:
-//   APPLY_ENABLED     "true" to take applications
-//   TURNSTILE_SECRET  the Turnstile widget's secret key
-//   APPLY_TO          where applications go (default office@midgettfite.com)
-//   APPLY_FROM        the sender, on a domain onboarded to Email Sending (default applications@midgettfite.com)
-// and in wrangler.jsonc:  "send_email": [{ "name": "APPLY_EMAIL" }]
+//   APPLY_ENABLED              "true" to take applications
+//   TURNSTILE_SECRET           the Turnstile widget's secret key
+//   JASPER_APPLY_URL           https://jasper-box.midgettfite.com/portal/applications
+//   JASPER_ACCESS_CLIENT_ID    the Access service token for the website (its own, not Ivy's)
+//   JASPER_ACCESS_CLIENT_SECRET
 
 const MAX_FIELD = 2000; // characters, any one answer
 const MAX_BODY = 64 * 1024; // bytes, the whole application
@@ -122,23 +123,17 @@ export function validate(form) {
   return out;
 }
 
-// The email to the office: plain text, every question with its answer, blank answers shown as "-".
-export function applicationEmail(a, receivedAt = new Date()) {
-  const when = receivedAt.toLocaleString('en-US', { timeZone: 'America/Chicago', dateStyle: 'medium', timeStyle: 'short' });
-  const lines = [
-    `Online rental application (DRAFT FORM, MF-316), received ${when} Central.`,
-    'No SSN, date of birth or driver\'s license number was asked for. Send the SmartMove invitation as usual.',
-    '',
-  ];
-  for (const [name, label] of FIELDS) {
-    if (MUST_BE_YES.includes(name)) continue;
-    lines.push(`${label}: ${a[name] || '-'}`);
-  }
-  lines.push('', `Seen in person with an agent: YES (ticked by the applicant; not yet checked against the showing records)`);
-  lines.push(`Agreed to the terms and signed as "${a.signature}".`);
+// What Jasper receives: every question in the form's order, with its label so Jasper can show it without its own
+// copy of the form. `id` lets Jasper ignore the same application sent twice. The showing is not checked here.
+export function applicationForJasper(a, receivedAt = new Date(), id = crypto.randomUUID()) {
   return {
-    subject: `Rental application: ${a.property.slice(0, 120)}`,
-    text: lines.join('\n'),
+    kind: 'mf-316-application',
+    version: 1,
+    id,
+    received_at: receivedAt.toISOString(),
+    property: a.property,
+    seen_in_person_ticked: true,
+    answers: FIELDS.filter(([name]) => !MUST_BE_YES.includes(name)).map(([name, label]) => ({ name, label, value: a[name] })),
   };
 }
 
@@ -154,14 +149,18 @@ export async function verifyTurnstile(token, secret, ip, fetchImpl = fetch) {
   return out.success === true;
 }
 
+const NOT_SET_UP = 'The online application is not set up yet. Please call the office at (615) 444-3136.';
+const NOT_SENT = "We couldn't send your application just now. Nothing was sent. Please try again later, or call the office at (615) 444-3136.";
+
 export async function handleApply(request, env, fetchImpl = fetch) {
   if (request.method !== 'POST') throw new ApplyError(405, 'Use POST.');
   if (env.APPLY_ENABLED !== 'true') {
     throw new ApplyError(503, "Online applications aren't open yet. Please call the office at (615) 444-3136.");
   }
-  if (!env.TURNSTILE_SECRET || !env.APPLY_EMAIL) {
-    throw new ApplyError(503, 'The online application is not set up yet. Please call the office at (615) 444-3136.');
+  if (!env.TURNSTILE_SECRET || !env.JASPER_APPLY_URL || !env.JASPER_ACCESS_CLIENT_ID || !env.JASPER_ACCESS_CLIENT_SECRET) {
+    throw new ApplyError(503, NOT_SET_UP);
   }
+  if (!env.JASPER_APPLY_URL.startsWith('https://')) throw new ApplyError(503, NOT_SET_UP);
   const size = Number(request.headers.get('content-length') || 0);
   if (size > MAX_BODY) throw new ApplyError(413, 'That application is too large.');
   const form = await request.formData();
@@ -169,13 +168,24 @@ export async function handleApply(request, env, fetchImpl = fetch) {
     request.headers.get('cf-connecting-ip'), fetchImpl);
   if (!ok) throw new ApplyError(403, "We couldn't confirm you're a person. Please reload the page and try again.");
   const a = validate(form);
-  const { subject, text } = applicationEmail(a);
-  await env.APPLY_EMAIL.send({
-    to: env.APPLY_TO || 'office@midgettfite.com',
-    from: { email: env.APPLY_FROM || 'applications@midgettfite.com', name: 'Midgett & Fite Website' },
-    replyTo: a.email,
-    subject,
-    text,
-  });
+  let res;
+  try {
+    res = await fetchImpl(env.JASPER_APPLY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.JASPER_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.JASPER_ACCESS_CLIENT_SECRET,
+      },
+      body: JSON.stringify(applicationForJasper(a)),
+      redirect: 'manual', // an Access sign-in redirect means the token was refused, not success
+    });
+  } catch {
+    throw new ApplyError(502, NOT_SENT);
+  }
+  if (res.status !== 200 && res.status !== 201) throw new ApplyError(502, NOT_SENT);
+  let reply;
+  try { reply = await res.json(); } catch { reply = null; }
+  if (!reply || reply.ok !== true) throw new ApplyError(502, NOT_SENT);
   return { ok: true };
 }
