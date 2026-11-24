@@ -1,0 +1,291 @@
+---
+// Online rental application (MF-316) — DRAFT for Jeneva and Dan to approve.
+// Not in the site's navigation, not linked from any page, and marked noindex. The Worker turns every
+// application away until APPLY_ENABLED is set on beacon (worker/apply.js). The questions are the paper
+// application (public/forms/printable-application.pdf) minus SSN, date of birth, driver's license number,
+// and the occupants' relationship and birthdate; see docs/stories/MF-316-Application-Form-Summary-DRAFT-2026-11-21.md.
+// Field names must match FIELDS in worker/apply.js (a test checks the server side).
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+// Cloudflare's always-passes TEST site key. Swap for the real widget's site key before going live.
+const TURNSTILE_SITE_KEY = '1x00000000000000000000AA';
+
+const rentals = (await getCollection('listings'))
+  .filter((l) => (l.data.category === 'residential-rent' || l.data.category === 'commercial-rent') && l.data.status === 'active')
+  .map((l) => ({ id: l.id, label: `${l.data.address}, ${l.data.city}` }))
+  .sort((a, b) => a.label.localeCompare(b.label));
+---
+<Base title="Rental Application (draft) | Midgett & Fite Real Estate" noindex>
+  <p class="draft-banner"><strong>DRAFT for Jeneva and Dan.</strong> Not live: this page isn't linked from the site, and applications sent from it are turned away until you approve it.</p>
+
+  <h1>Rental Application</h1>
+  <p>Every adult who will live at the property fills in their own application. It takes about 10 minutes.</p>
+
+  <div id="apply-done" class="notice ok" hidden>
+    <strong>Thank you! Your application was sent to our office.</strong>
+    <p>What happens next: we'll email you an invitation from TransUnion SmartMove for the credit and background check, and we'll ask you for your pay stubs. If you have questions, call us at <a href="tel:+16154443136">(615) 444-3136</a>.</p>
+  </div>
+
+  <form id="apply-form" novalidate>
+    <section>
+      <h2>The property</h2>
+      <label>Which property are you applying for? <span class="req">*</span>
+        <select name="property" id="property" required>
+          <option value="">Choose a property</option>
+          {rentals.map((r) => <option value={r.label} data-id={r.id}>{r.label}</option>)}
+          <option value="other">Another property (type it below)</option>
+        </select>
+      </label>
+      <label id="property-other-wrap" hidden>Property address
+        <input type="text" id="property-other" maxlength="200" />
+      </label>
+
+      <label class="check big"><input type="checkbox" name="seen_in_person" value="yes" id="seen" required />
+        <span><strong>I have seen this property in person with one of Midgett &amp; Fite's agents.</strong> <span class="req">*</span><br />
+        Driving by doesn't count. Every adult who will live there needs to have toured it.</span></label>
+      <div id="showing-first" class="notice warn">
+        We only take applications after a showing. Please call <a href="tel:+16154443136">(615) 444-3136</a> to set one up; we'll be glad to show it to you.
+      </div>
+    </section>
+
+    <fieldset id="rest" disabled>
+      <section>
+        <div class="row2">
+          <label>Agent who showed it to you <input type="text" name="showing_agent" maxlength="100" /></label>
+          <label>Date of the showing <input type="date" name="showing_date" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>About you</h2>
+        <label>Full legal name <span class="req">*</span> <input type="text" name="full_name" required maxlength="150" autocomplete="name" /></label>
+        <div class="row2">
+          <label>Email <span class="req">*</span> <input type="email" name="email" required autocomplete="email" /></label>
+          <label>Phone <span class="req">*</span> <input type="tel" name="phone" required autocomplete="tel" /></label>
+        </div>
+        <label>Other adults applying for this property with you
+          <input type="text" name="other_applicants" maxlength="300" placeholder="Their names; each one fills in their own application" /></label>
+        <p class="hint">Please don't type your Social Security number, date of birth or driver's license number anywhere on this form. The screening company, TransUnion SmartMove, asks for them on its own secure site.</p>
+      </section>
+
+      <section>
+        <h2>Work and income <small>(past 5+ years)</small></h2>
+        <label>Current employer <span class="req">*</span> <input type="text" name="employer" required maxlength="150" /></label>
+        <div class="row2">
+          <label>How long there? <input type="text" name="employer_how_long" maxlength="60" /></label>
+          <label>Supervisor's name <input type="text" name="supervisor" maxlength="100" /></label>
+          <label>Employer phone <input type="tel" name="employer_phone" /></label>
+          <label>Employer email <input type="email" name="employer_email" /></label>
+        </div>
+        <label>Past employer <input type="text" name="past_employer" maxlength="150" /></label>
+        <div class="row2">
+          <label>How long there? <input type="text" name="past_employer_how_long" maxlength="60" /></label>
+          <label>Supervisor's name <input type="text" name="past_supervisor" maxlength="100" /></label>
+          <label>Phone <input type="tel" name="past_employer_phone" /></label>
+          <label>Email <input type="email" name="past_employer_email" /></label>
+        </div>
+        <label>Other jobs in the past 5 years <textarea name="job_history_more" rows="3" maxlength="2000"></textarea></label>
+        <label>Other income sources <textarea name="other_income" rows="2" maxlength="2000"></textarea></label>
+      </section>
+
+      <section>
+        <h2>Where you live now</h2>
+        <label>Current address <span class="req">*</span> <input type="text" name="current_address" required maxlength="200" autocomplete="street-address" /></label>
+        <div class="row2">
+          <label>How long at this address? <input type="text" name="current_how_long" maxlength="60" /></label>
+          <label>Current rent <input type="text" name="current_rent" maxlength="30" inputmode="decimal" /></label>
+          <label>Current landlord <input type="text" name="current_landlord" maxlength="150" /></label>
+          <label>Landlord phone <input type="tel" name="current_landlord_phone" /></label>
+          <label>Landlord email <input type="email" name="current_landlord_email" /></label>
+        </div>
+        <label>Why are you moving? <textarea name="why_moving" rows="2" maxlength="2000"></textarea></label>
+
+        <h3>Where you lived before</h3>
+        <label>Past address <input type="text" name="past_address" maxlength="200" /></label>
+        <div class="row2">
+          <label>How long there? <input type="text" name="past_how_long" maxlength="60" /></label>
+          <label>Past landlord <input type="text" name="past_landlord" maxlength="150" /></label>
+          <label>Landlord phone <input type="tel" name="past_landlord_phone" /></label>
+          <label>Landlord email <input type="email" name="past_landlord_email" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who will live there</h2>
+        <label>Legal names of everyone else who will live there
+          <textarea name="occupants" rows="3" maxlength="2000" placeholder="One name per line"></textarea></label>
+        <p class="hint">Every adult on this list also fills in their own application.</p>
+      </section>
+
+      <section>
+        <h2>Personal reference</h2>
+        <div class="row2">
+          <label>Name <input type="text" name="reference_name" maxlength="150" /></label>
+          <label>Phone <input type="tel" name="reference_phone" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Other questions</h2>
+        <fieldset class="yn"><legend>Will anyone who lives at the property smoke? <span class="req">*</span> <small>(Smoking is allowed only outside.)</small></legend>
+          <label><input type="radio" name="smoker" value="yes" required /> Yes</label>
+          <label><input type="radio" name="smoker" value="no" /> No</label></fieldset>
+
+        <fieldset class="yn"><legend>Do you expect to have pets at the property? <span class="req">*</span></legend>
+          <label><input type="radio" name="pets" value="yes" required data-detail="pets-detail" /> Yes</label>
+          <label><input type="radio" name="pets" value="no" data-detail="pets-detail" /> No</label></fieldset>
+        <label id="pets-detail" hidden>Tell us about each pet (kind, breed, size)
+          <textarea name="pets_detail" rows="2" maxlength="2000"></textarea>
+          <span class="hint">Each property's owner decides about pets, so we'll check with them before going further.</span></label>
+
+        <fieldset class="yn"><legend>Have you ever been convicted of a felony or misdemeanor? <span class="req">*</span></legend>
+          <label><input type="radio" name="convicted" value="yes" required data-detail="convicted-detail" /> Yes</label>
+          <label><input type="radio" name="convicted" value="no" data-detail="convicted-detail" /> No</label></fieldset>
+        <label id="convicted-detail" hidden>Please explain
+          <textarea name="convicted_detail" rows="2" maxlength="2000"></textarea></label>
+
+        <label>If your application is accepted, when would you have the money for the security deposit, first month's rent and pet fee (if approved)? <span class="req">*</span>
+          <input type="text" name="money_ready" required maxlength="100" /></label>
+        <label>Anything else you'd like us to know <textarea name="other_info" rows="3" maxlength="2000"></textarea></label>
+      </section>
+
+      <section>
+        <h2>What we'll ask for next</h2>
+        <ul class="next">
+          <li><strong>$300 application money</strong>, paid to the office. $45 for each adult pays for the credit and background check. If you're approved, the rest goes toward your first month's rent; if you're not, the rest is refunded.</li>
+          <li><strong>3 months of pay stubs.</strong> If you're self-employed: 2 years of tax returns and 2 to 3 months of bank statements.</li>
+          <li>An email from <strong>TransUnion SmartMove</strong> to run the credit and background check on its own secure site.</li>
+        </ul>
+        <p class="hint">Please don't send pay stubs or payment through this form; we'll tell you how.</p>
+      </section>
+
+      <section>
+        <h2>Please read and sign</h2>
+        <p>By signing, I understand and agree that:</p>
+        <ul class="terms">
+          <li>All adults who would be living at the property have toured the property with a Midgett &amp; Fite employee.</li>
+          <li>All information given is true to the best of my knowledge.</li>
+          <li>Landlords, employers and creditors may release information to Midgett &amp; Fite about my tenancy, employment, income and credit.</li>
+          <li>Midgett &amp; Fite may use part of the $300 with this application to run credit and background checks, plus other checks if needed.</li>
+          <li>A credit report may be pulled on me by Midgett &amp; Fite to evaluate this application.</li>
+          <li><strong>If I don't respond to requests for information within 24 hours, Midgett &amp; Fite has the right to reject my application.</strong></li>
+          <li>If my application is accepted, I must sign a lease, and if I back out, I forfeit the entire $300.</li>
+          <li>If my application is rejected, the rest of the $300 (after processing fees) will be refunded to me.</li>
+        </ul>
+        <label class="check"><input type="checkbox" name="agree" value="yes" required /> <span>I have read and agree to the above. <span class="req">*</span></span></label>
+        <label>Type your full legal name as your signature <span class="req">*</span>
+          <input type="text" name="signature" required maxlength="150" /></label>
+        <p class="hint">Typing your name here has the same force and effect as a written signature.</p>
+
+        <!-- SMS opt-in (10DLC, TCR C2TBBDC): never pre-ticked, never required. Wording matches /contact and /text-messages. -->
+        <label class="check sms-optin"><input type="checkbox" name="sms_consent" value="Yes, OK to text" /> <span>Yes, Midgett &amp; Fite Realty may text me at this number when a rental opens up. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Not required to send this application or to rent from us. See our <a href="/text-messages">text message terms</a> and <a href="/privacy">privacy policy</a>.</span></label>
+      </section>
+
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
+      <div id="apply-error" class="notice err" hidden></div>
+      <button type="submit" id="apply-submit">Send my application</button>
+      <p class="hint">Midgett &amp; Fite supports the Fair Housing Act. Every applicant is asked the same questions.</p>
+    </fieldset>
+  </form>
+</Base>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  const form = document.getElementById('apply-form') as HTMLFormElement;
+  const seen = document.getElementById('seen') as HTMLInputElement;
+  const rest = document.getElementById('rest') as HTMLFieldSetElement;
+  const showingFirst = document.getElementById('showing-first') as HTMLElement;
+  const property = document.getElementById('property') as HTMLSelectElement;
+  const otherWrap = document.getElementById('property-other-wrap') as HTMLElement;
+  const otherInput = document.getElementById('property-other') as HTMLInputElement;
+  const errBox = document.getElementById('apply-error') as HTMLElement;
+  const submit = document.getElementById('apply-submit') as HTMLButtonElement;
+
+  // The office can send a link that picks the property: /apply-draft?property=<listing id>
+  const pick = new URLSearchParams(location.search).get('property');
+  if (pick) {
+    const opt = [...property.options].find((o) => o.dataset.id === pick);
+    if (opt) property.value = opt.value;
+  }
+  const syncProperty = () => { otherWrap.hidden = property.value !== 'other'; };
+  property.addEventListener('change', syncProperty);
+  syncProperty();
+
+  // Without the seen-in-person box, the rest of the form stays closed and says a showing comes first.
+  const syncSeen = () => { rest.disabled = !seen.checked; showingFirst.hidden = seen.checked; };
+  seen.addEventListener('change', syncSeen);
+  syncSeen();
+
+  // Yes on pets or convictions opens the "tell us more" box.
+  form.querySelectorAll<HTMLInputElement>('input[data-detail]').forEach((r) => r.addEventListener('change', () => {
+    const box = document.getElementById(r.dataset.detail!)!;
+    box.hidden = r.value !== 'yes';
+    box.querySelector('textarea')!.required = r.value === 'yes';
+  }));
+
+  const showError = (msg: string) => { errBox.textContent = msg; errBox.hidden = false; errBox.scrollIntoView({ block: 'center' }); };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errBox.hidden = true;
+    if (!form.checkValidity()) {
+      const bad = form.querySelector<HTMLElement>(':invalid');
+      form.reportValidity();
+      bad?.focus();
+      return;
+    }
+    const data = new FormData(form);
+    if (data.get('property') === 'other') data.set('property', otherInput.value.trim());
+    if (!data.get('property')) return showError('Please tell us which property you are applying for.');
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/apply', { method: 'POST', body: data });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json.ok) {
+        form.hidden = true;
+        (document.getElementById('apply-done') as HTMLElement).hidden = false;
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      showError(json.error || 'Something went wrong. Please call the office at (615) 444-3136.');
+    } catch {
+      showError('Something went wrong. Please call the office at (615) 444-3136.');
+    }
+    submit.disabled = false;
+    submit.textContent = 'Send my application';
+    (window as any).turnstile?.reset();
+  });
+</script>
+
+<style>
+  .draft-banner { background:#fff7ed; border:1px solid #fdba74; color:#7c2d12; padding:10px 14px; border-radius:8px; }
+  form { max-width:640px; display:grid; gap:8px; }
+  fieldset#rest { border:0; padding:0; margin:0; display:grid; gap:8px; min-width:0; }
+  fieldset#rest:disabled { opacity:.45; }
+  section { display:grid; gap:10px; padding:14px 0; border-bottom:1px solid #e5e7eb; }
+  h2 { margin:8px 0 0; font-size:1.25rem; }
+  h3 { margin:6px 0 0; font-size:1.05rem; }
+  label { display:block; font-weight:600; font-size:.95rem; }
+  input[type=text], input[type=email], input[type=tel], input[type=date], select, textarea { display:block; margin-top:4px; font:inherit; font-weight:400; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; width:100%; box-sizing:border-box; }
+  label > .hint { display:block; margin-top:4px; }
+  .row2 { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; }
+  .check { display:flex; gap:10px; align-items:flex-start; font-weight:400; }
+  .check input { width:auto; margin-top:4px; flex:none; }
+  .check.big { font-size:1rem; padding:12px; border:2px solid #b0413e; border-radius:8px; }
+  .sms-optin { font-size:.85rem; line-height:1.4; }
+  .yn { border:0; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:6px 18px; }
+  .yn legend { font-weight:600; font-size:.95rem; margin-bottom:4px; width:100%; }
+  .yn label { display:flex; gap:6px; font-weight:400; align-items:center; }
+  .req { color:#b0413e; }
+  .hint { font-size:.85rem; color:#52606d; margin:0; font-weight:400; }
+  .notice { padding:12px 14px; border-radius:8px; }
+  .notice.ok { background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46; }
+  .notice.warn { background:#fef9c3; border:1px solid #facc15; color:#713f12; }
+  .notice.err { background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; }
+  .notice[hidden], label[hidden] { display:none; }
+  .terms, .next { margin:0; padding-left:20px; display:grid; gap:4px; font-size:.95rem; }
+  button[type=submit] { justify-self:start; }
+</style>

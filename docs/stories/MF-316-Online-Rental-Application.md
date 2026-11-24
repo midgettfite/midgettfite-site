@@ -43,7 +43,7 @@ improvement and automate our application process."
 | Social Security numbers and dates of birth | **Left to SmartMove**, which already asks each applicant for them on its own secure site. The website never holds them. |
 | Which questions? | **Today's paper application, word for word**, sent to Steve to turn into the form, then approved by you and Jeneva. |
 | Who sees applications in Jasper? | **Dan and the property manager (Jeneva).** |
-| **For Steve:** until Jasper can take applications, where does a finished one go? | **Into Jasper**, as criterion 5 says: the form stays off until Jasper has a page for applications. The other way, the whole application emailed to office@ (no SSN or birth date), could go live sooner but puts applicants' job, income and record details in a shared mailbox. |
+| **For Steve:** until Jasper can take applications, where does a finished one go? | **Into Jasper**, as criterion 5 says: the form stays off until Jasper has a page for applications. The other way, the whole application emailed to office@ (no SSN or birth date), could go live sooner but puts applicants' job, income and record details in a shared mailbox. <br>**DECISION (Steve, 11/23):** into Jasper. The site's Worker checks the application and hands it to Jasper on the box; Jasper stores it and emails the office with no personal details. The form stays switched off until Jasper can take applications. No interim email. |
 
 ## Status
 DRAFT, 2026-11-20. In the backlog for Dan to rank.
@@ -73,3 +73,8 @@ occupants' relationships and birthdates. Every question, why it's there, and 10 
 
 **Next step:** put the summary PDF in front of Jeneva and Dan on the board, with the defaults. When they've answered, it goes to To do: their changes to the form, then the beacon setup
 (Turnstile, email or Jasper, `/apply`).
+
+**2026-11-23, Steve decided where applications go: into Jasper** (the row above). PR #4 now hands a checked application to
+Jasper (`POST jasper-box.midgettfite.com/portal/applications`, with its own Cloudflare Access service token, the way Ivy reaches the box) instead of emailing it, and the Cloudflare email setup is gone from the plan. The
+Jasper side (an endpoint that stores the application, a portal page, and the detail-free email) is written up in the jasper
+repo: `docs/MF-316-Applications-Receive.md` on branch `scout/mf-316-applications`.

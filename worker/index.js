@@ -14,6 +14,7 @@
 //                        Create listing page, which Jasper helps fill in).
 //   POST /api/update     ONE commit: a listing's details (Edit listing, MF-237). Its photos are left alone.
 //   POST /api/remove     ONE commit: takes a listing off the website. Its photos stay in the repo.
+//   POST /api/apply      the rental application (MF-316, draft). Public, no passcode: its own checks are in apply.js.
 //
 // Why one commit: Pages CMS saves every photo as its own commit. Several at once
 // race each other on GitHub, so some fail and retries leave -1/-2/-3 copies.
@@ -22,6 +23,7 @@
 //   GITHUB_TOKEN  fine-grained token, this repo only, Contents: read and write
 //   UPLOAD_KEY    the portal's key; lives on the office box too, staff never see it
 import { Document, parseDocument } from 'yaml';
+import { ApplyError, handleApply } from './apply.js';
 
 const REPO = 'midgettfite/midgettfite-site';
 const apiBase = (env) => env.GITHUB_API || 'https://api.github.com'; // override only for local testing
@@ -35,6 +37,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
+    // The rental application (MF-316) is public and has its own checks; see apply.js.
+    if (url.pathname === '/api/apply') {
+      try {
+        return json(await handleApply(request, env));
+      } catch (err) {
+        if (err instanceof ApplyError) return json({ error: err.message }, err.status);
+        return json({ error: 'Something went wrong sending your application. Please call the office at (615) 444-3136.' }, 500);
+      }
+    }
     try {
       if (!env.GITHUB_TOKEN || !env.UPLOAD_KEY) {
         return json({ error: 'The photo uploader is not set up yet (missing secrets).' }, 503);
