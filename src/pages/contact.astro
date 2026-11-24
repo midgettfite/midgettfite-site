@@ -1,13 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import { office } from '../lib/site.mjs';
+const site = office();
 ---
 <Base title="Contact Us | Midgett & Fite Real Estate">
   <h1>Get in Touch</h1>
   <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
   <p class="contact-lines">
-    <strong>Phone:</strong> <a href="tel:+16154443136">(615) 444-3136</a><br />
-    <strong>Email:</strong> <a href="mailto:office@midgettfite.com">office@midgettfite.com</a><br />
-    <strong>Office:</strong> 312 South Maple Street, Lebanon, TN 37087
+    <strong>Phone:</strong> <a href={site.tel}>{site.phone}</a><br />
+    <strong>Email:</strong> <a href={site.mailto}>{site.email}</a><br />
+    <strong>Office:</strong> {site.address}{site.hours && <Fragment><br /><strong>Hours:</strong> {site.hours}</Fragment>}
   </p>
 
   <div id="form-success" style="display:none;padding:16px;background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;color:#065f46;max-width:520px;margin-bottom:12px;">
@@ -46,10 +48,10 @@ import Base from '../layouts/Base.astro';
         form.style.display = 'none';
         successBox.style.display = 'block';
       } else {
-        alert('Something went wrong. Please email us directly at office@midgettfite.com.');
+        alert('Something went wrong. Please email us directly at ' + __OFFICE_EMAIL__ + '.');
       }
     } catch {
-      alert('Something went wrong. Please email us directly at office@midgettfite.com.');
+      alert('Something went wrong. Please email us directly at ' + __OFFICE_EMAIL__ + '.');
     }
   });
 </script>

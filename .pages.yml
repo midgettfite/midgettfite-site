@@ -3,6 +3,12 @@ media:
     input: public/uploads
     output: /uploads
     extensions: [jpg, jpeg, png, webp]
+  - name: site
+    label: Team and Home Page Photos
+    input: public/img
+    output: /img
+    rename: safe
+    extensions: [jpg, jpeg, png, webp]
 
 content:
   - name: listings
@@ -45,3 +51,95 @@ content:
       - { name: infoUrl, label: Property Information Link (RealTracs), type: string, required: false }
       - { name: description, label: Description, type: text }
       - { name: listedDate, label: Date Listed, type: date }
+
+  # The four forms below (MF-315). Their limits and rules are also in src/lib/site.mjs; `npm test` checks they match.
+  - name: team
+    label: Team
+    description: "The people on the Meet the Team page. Drag a person up or down to change the order. Live about 2 minutes after you save."
+    type: file
+    path: src/site-content/team.yml
+    format: yaml
+    operations: { create: false, rename: false, delete: false }
+    fields:
+      - name: people
+        label: People
+        type: object
+        required: true
+        list: { min: 1, max: 20, collapsible: { collapsed: true, summary: "{fields.name}" } }
+        fields:
+          - { name: name, label: Name, type: string, required: true, pattern: { regex: '\S', message: "Type the person's name." }, options: { maxlength: 60 } }
+          - { name: title, label: Job Title, type: string, required: true, pattern: { regex: '\S', message: "Type the person's job title." }, options: { maxlength: 80 } }
+          - { name: photo, label: Photo, description: "Square, head and shoulders. It must be under 3.4 MB, so shrink a phone photo first (email it to yourself and choose Medium). JPG, PNG or WebP.", type: image, required: true, options: { media: site } }
+          - { name: bio, label: About This Person, description: "Plain words only. Leave a blank line to start a new paragraph. Up to 2,000 characters.", type: text, required: true, pattern: { regex: '\S', message: "Type a few words about this person." }, options: { maxlength: 2000 } }
+
+  - name: testimonials
+    label: Testimonials
+    description: "The quotes on the Testimonials page. Drag a quote up or down to change the order. The reviews on the Home page are in the Home Page form. Live about 2 minutes after you save."
+    type: file
+    path: src/site-content/testimonials.yml
+    format: yaml
+    operations: { create: false, rename: false, delete: false }
+    fields:
+      - name: testimonials
+        label: Testimonials
+        type: object
+        required: true
+        list: { min: 1, max: 60, collapsible: { collapsed: true, summary: "{fields.name}" } }
+        fields:
+          - { name: quote, label: What They Said, description: "Leave off the quotation marks; the website adds them. Up to 1,500 characters.", type: text, required: true, pattern: { regex: '\S', message: "Type what the client said." }, options: { maxlength: 1500 } }
+          - { name: name, label: "Client's Name", description: "As it should show, like Levi H.", type: string, required: true, pattern: { regex: '\S', message: "Type the client's name." }, options: { maxlength: 60 } }
+
+  - name: office
+    label: Office Details
+    description: "Shown at the top and bottom of every page, on Contact Us, and everywhere else the website gives the phone number. Live about 2 minutes after you save. If the office moves, tell Steve too: the map link and Company History are not here."
+    type: file
+    path: src/site-content/office.yml
+    format: yaml
+    operations: { create: false, rename: false, delete: false }
+    fields:
+      - { name: phone, label: Phone Number, description: "Type it like 615-555-0100. This changes the number on the website only. Tell Steve before you change it: the text message sign-up and Ivy use this number too, and a listing that gives the number in its description has to be changed in that listing.", type: string, required: true, pattern: { regex: '^\s*(\+?1[-. ]?)?\(?[2-9]\d{2}\)?[-. ]?\d{3}[-. ]?\d{4}\s*$', message: "Type a full phone number, like 615-555-0100." }, options: { maxlength: 20 } }
+      - { name: email, label: Email, description: "The address shown on the website. Where the contact form is delivered is set separately; ask Steve.", type: string, required: true, pattern: { regex: '^\s*[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+\s*$', message: "Type an email address, like name@example.com." }, options: { maxlength: 80 } }
+      - { name: street, label: Street Address, type: string, required: true, pattern: { regex: '\S', message: "Type the street address." }, options: { maxlength: 80 } }
+      - { name: suite, label: Suite, description: "Shown on the Privacy Policy page only.", type: string, required: false, options: { maxlength: 30 } }
+      - { name: city, label: City, type: string, required: true, pattern: { regex: '\S', message: "Type the city." }, options: { maxlength: 40 } }
+      - { name: state, label: State, type: string, required: true, pattern: { regex: '^\s*[A-Z]{2}\s*$', message: "Two capital letters, like TN." } }
+      - { name: zip, label: ZIP, type: string, required: true, pattern: { regex: '^\s*\d{5}(-\d{4})?\s*$', message: "Five digits, like 37087." } }
+      - { name: hours, label: Office Hours, description: "Shown on Contact Us, on one line. Leave it blank and no hours are shown.", type: string, required: false, options: { maxlength: 120 } }
+
+  - name: home
+    label: Home Page
+    description: "The slideshow, the reviews and the welcome text on the Home page. Drag a photo or a review up or down to change the order. Live about 2 minutes after you save."
+    type: file
+    path: src/site-content/home.yml
+    format: yaml
+    operations: { create: false, rename: false, delete: false }
+    fields:
+      - { name: welcomeText, label: Welcome Text, description: "The sentence under Get In Touch. Up to 600 characters.", type: text, required: true, pattern: { regex: '\S', message: "Type the welcome text." }, options: { maxlength: 600 } }
+      - name: slides
+        label: Slideshow Photos
+        type: object
+        required: true
+        list: { min: 1, max: 6, collapsible: { collapsed: true, summary: "{fields.caption}" } }
+        fields:
+          - { name: photo, label: Photo, description: "A wide photo works best. It must be under 3.4 MB, so shrink a phone photo first (email it to yourself and choose Large). JPG, PNG or WebP.", type: image, required: true, options: { media: site } }
+          - { name: caption, label: Caption, description: "A few words saying what the photo shows. It is not printed on the photo: it is read aloud to visitors who can't see it, and shows if the photo doesn't load.", type: string, required: true, pattern: { regex: '\S', message: "Say what the photo shows." }, options: { maxlength: 150 } }
+          - { name: showWhole, label: Show the whole photo on phones, description: "Turn this on for a photo with words on it, so a phone doesn't cut off the sides.", type: boolean, default: false }
+          - name: buttons
+            label: Buttons on This Photo
+            type: select
+            options:
+              values:
+                - { label: None, value: none }
+                - { label: Residential for sale and for rent, value: residential }
+                - { label: Commercial for sale and for rent, value: commercial }
+            default: none
+      - name: reviews
+        label: Reviews on the Home Page
+        description: "Separate from the Testimonials page. To take a client off the website, remove them in both places."
+        type: object
+        required: true
+        list: { min: 1, max: 12, collapsible: { collapsed: true, summary: "{fields.name}" } }
+        fields:
+          - { name: name, label: "Client's Name", type: string, required: true, pattern: { regex: '\S', message: "Type the client's name." }, options: { maxlength: 60 } }
+          - { name: photo, label: Photo, description: "Square works best. It must be under 3.4 MB, so shrink a phone photo first. JPG, PNG or WebP.", type: image, required: true, options: { media: site } }
+          - { name: quote, label: Review, description: "Shown just as you type it, so put in the quotation marks here. Up to 1,500 characters.", type: text, required: true, pattern: { regex: '\S', message: "Type the review." }, options: { maxlength: 1500 } }

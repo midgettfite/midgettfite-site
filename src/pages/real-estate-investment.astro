@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import { office } from '../lib/site.mjs';
+const site = office();
 ---
 <Base title="Real Estate Investment | Midgett & Fite Real Estate" description="Sound real estate investment advice for Middle Tennessee, backed by CCIM expertise.">
   <h1>Real Estate Investment</h1>
@@ -23,5 +25,5 @@ import Base from '../layouts/Base.astro';
 
   <p>In addition to our management services and listing/selling real estate, we are also available for consultation when you decide to venture into finding investment property in Middle Tennessee. Call us today and set up your risk-free appointment.</p>
 
-  <p><a href="/contact">Contact for more information</a> or call (615) 444-3136.</p>
+  <p><a href="/contact">Contact for more information</a> or call {site.phone}.</p>
 </Base>

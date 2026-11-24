@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { office } from '../../lib/site.mjs';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -14,6 +15,7 @@ const money = (n: number) => '$' + n.toLocaleString('en-US');
 const soldLeased = d.status === 'sold-leased';
 const soldLabel = isRent ? 'LEASED!' : 'SOLD!';
 const { Content } = await render(l);
+const site = office();
 ---
 <Base title={`${d.address} | Midgett & Fite Real Estate`}>
   <p><a href="javascript:history.back()">&larr; Back to listings</a></p>
@@ -41,5 +43,5 @@ const { Content } = await render(l);
 
   {d.videoUrl && <p><a href={d.videoUrl}>Watch the video tour &rarr;</a></p>}
   {d.infoUrl && <p><a href={d.infoUrl} target="_blank" rel="noopener">Property Information &rarr;</a></p>}
-  <p><a href="/contact">Contact us about this property</a> or call (615) 444-3136.</p>
+  <p><a href="/contact">Contact us about this property</a> or call {site.phone}.</p>
 </Base>

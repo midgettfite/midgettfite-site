@@ -2,6 +2,8 @@
 interface Props { title?: string; description?: string }
 const { title = 'Midgett & Fite Real Estate', description = 'Buying & Selling Homes, Property Management, and Real Estate Investment in Lebanon, TN.' } = Astro.props;
 const LOGO = '/img/logo.jpg';
+import { office } from '../lib/site.mjs';
+const site = office();
 const nav = [
   { label: 'Home', href: '/' },
   { label: 'For Sale', children: [
@@ -52,13 +54,13 @@ function isActive(item: any) {
         </a>
         <div class="top-right">
           <div class="socials">
-            <a href="mailto:office@midgettfite.com" aria-label="Email" class="icon-email">&#9993;</a>
+            <a href={site.mailto} aria-label="Email" class="icon-email">&#9993;</a>
             <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener" aria-label="Facebook" class="icon-fb">f</a>
             <a href="https://maps.google.com/?cid=2622158749148926133" target="_blank" rel="noopener" aria-label="Map" class="icon-map">&#128205;</a>
           </div>
         </div>
       </div>
-      <div class="wrap"><div class="phone">Give us a call today! <a href="tel:+16154443136">615-444-3136</a></div></div>
+      <div class="wrap"><div class="phone">Give us a call today! <a href={site.tel}>{site.phoneDashes}</a></div></div>
       <nav>
         <div class="wrap">
           <ul>
@@ -86,9 +88,9 @@ function isActive(item: any) {
         <div class="foot-top">
           <div>
             <strong>Midgett &amp; Fite Real Estate</strong><br />
-            312 South Maple Street, Lebanon, TN 37087<br />
-            <a href="tel:+16154443136">(615) 444-3136</a> &nbsp;·&nbsp;
-            <a href="mailto:office@midgettfite.com">office@midgettfite.com</a>
+            {site.address}<br />
+            <a href={site.tel}>{site.phone}</a> &nbsp;·&nbsp;
+            <a href={site.mailto}>{site.email}</a>
           </div>
           <div class="foot-links">
             <a href="https://www.facebook.com/midgettandfite/" target="_blank" rel="noopener">Facebook</a>
