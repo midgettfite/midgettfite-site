@@ -1,73 +1,41 @@
 ---
 import Base from '../layouts/Base.astro';
+import { home, office } from '../lib/site.mjs';
+const { welcomeText, slides, reviews } = home();
+const site = office();
 ---
 <Base>
   <section class="hero" id="hero-slideshow">
     <div class="slides">
-      <div class="slide is-active" data-slide="0">
-        <img class="fit-whole" src="/img/hero-home.png" alt="Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee" />
-      </div>
-      <div class="slide" data-slide="1">
-        <img src="/img/hero-residential.jpg" alt="Residential real estate in Middle Tennessee" />
-        <div class="hero-cta">
-          <a href="/residential-property-for-sale" class="cta-btn">View Residential Property For Sale</a>
-          <a href="/residential-property-for-rent" class="cta-btn">View Residential Property For Rent</a>
+      {slides.map((s, i) => (
+        <div class={`slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
+          <img class={s.showWhole ? 'fit-whole' : undefined} src={s.photo} alt={s.caption} />
+          {s.buttons.length > 0 && (
+            <div class="hero-cta">
+              {s.buttons.map((b) => <a href={b.href} class="cta-btn">{b.label}</a>)}
+            </div>
+          )}
         </div>
-      </div>
-      <div class="slide" data-slide="2">
-        <img src="/img/hero-commercial.jpg" alt="Commercial real estate in Middle Tennessee" />
-        <div class="hero-cta">
-          <a href="/commercial-property-for-sale" class="cta-btn">View Commercial Property For Sale</a>
-          <a href="/commercial-property-for-rent" class="cta-btn">View Commercial Property For Rent</a>
-        </div>
-      </div>
+      ))}
     </div>
     <button type="button" class="hero-arrow prev" aria-label="Previous slide">&lsaquo;</button>
     <button type="button" class="hero-arrow next" aria-label="Next slide">&rsaquo;</button>
     <div class="hero-dots">
-      <button type="button" class="dot is-active" data-dot="0" aria-label="Slide 1"></button>
-      <button type="button" class="dot" data-dot="1" aria-label="Slide 2"></button>
-      <button type="button" class="dot" data-dot="2" aria-label="Slide 3"></button>
+      {slides.map((_, i) => (
+        <button type="button" class={`dot${i === 0 ? ' is-active' : ''}`} data-dot={i} aria-label={`Slide ${i + 1}`}></button>
+      ))}
     </div>
   </section>
   <section class="testimonials-home">
     <h2>What People Say About Us</h2>
     <div class="quotes-home">
-      <div class="quote">
-        <img src="/img/review-jennifer.jpg" alt="Jennifer A." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Jennifer A.</a>
-        <p>&ldquo;Midgett &amp; Fite is a family-friendly real estate business whose employees deeply care for clients beyond what is being bought or sold. We have greatly enjoyed and benefited from working with Midgett &amp; Fite in the past and will gladly choose to work with them again in the future.&rdquo;</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-micah.jpg" alt="Micah M." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Micah M.</a>
-        <p>&ldquo;Thank you, Midgett &amp; Fite, for helping me buy my first house! Dan Midgett did a great job looking hard and finding something that would meet my needs, well within my budget&mdash; I'm really happy!&rdquo;</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-anna.jpg" alt="Anna S." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Anna S.</a>
-        <p>Midgett and Fite did a great job helping my husband and I find and purchase our very first home! They were very attentive to all the things that we wanted in a new home, and did a great job working within our time schedule and our budgeting needs. Midgett and Fite went above and beyond to help us even through some difficult time constraints and complications with the contract. I would definitely recommend them to anyone looking to buy or sell a home.</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-jason.jpg" alt="Jason L." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Jason L.</a>
-        <p>&ldquo;Dan is the man you want in your corner! His high level of knowledge and integrity were key for us while making such a major decision. Him and his entire team were honest and attentive to our unique circumstances, and we highly recommend them, especially to first-time buyers like ourselves. Thank you, Midgett &amp; Fite Real Estate!&rdquo;</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-matthew.jpg" alt="Matthew H." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Matthew H.</a>
-        <p>&ldquo;Great service! Dan helped me find the perfect property and took care of lots of things I wouldn't have thought about. He obviously knows the business inside and out and isn't afraid to be honest about things that might be of concern. I'd recommend him to anyone.&rdquo;</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-levi.jpg" alt="Levi H." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Levi H.</a>
-        <p>&ldquo;When my dad died, the house he left me was a huge mess. Dan worked with me and my brother on a complicated remodeling venture and got it done really fast and professionally and then turned around and sold it. Dan is so knowledgeable about the market and knew how to guide us every step of the way with all the problems we had with various potential buyers&hellip; he's also FAST. I really can't imagine having a better real estate agent. I can't recommend him enough.&rdquo;</p>
-      </div>
-      <div class="quote">
-        <img src="/img/review-heather.jpg" alt="Heather L." class="quote-avatar" />
-        <a href="/testimonials" class="quote-name">Heather L.</a>
-        <p>The sales team &ldquo;Family&rdquo; at Midgett and Fite were absolutely Phenomenal. They are very knowledgeable, friendly, and know the business backward and forwards. They relay any and all information in layman's terms so you can understand and make a sound decision on your purchase. They have been in the real estate business for years for a reason. They are honest, caring and want you to have a phenomenal experience.</p>
-      </div>
+      {reviews.map((r) => (
+        <div class="quote">
+          <img src={r.photo} alt={r.name} class="quote-avatar" />
+          <a href="/testimonials" class="quote-name">{r.name}</a>
+          <p>{r.quote}</p>
+        </div>
+      ))}
     </div>
     <p class="more-link"><a href="/testimonials">Read more testimonials &rarr;</a></p>
   </section>
@@ -75,7 +43,7 @@ import Base from '../layouts/Base.astro';
   <section class="get-in-touch">
     <div class="git-inner">
       <h2>Get In Touch</h2>
-      <p>Speak to one of our team members today! We look forward to your call &mdash; and we're ready to help you fulfill your real estate dreams.</p>
+      <p>{welcomeText}</p>
 
       <div id="git-success" style="display:none;">Thanks! Your message was sent. We'll be in touch shortly.</div>
 
@@ -99,7 +67,7 @@ import Base from '../layouts/Base.astro';
         <button type="submit">Send</button>
       </form>
 
-      <p class="git-phone"><a href="tel:+16154443136">(615) 444-3136</a></p>
+      <p class="git-phone"><a href={site.tel}>{site.phone}</a></p>
     </div>
   </section>
 
@@ -204,10 +172,10 @@ import Base from '../layouts/Base.astro';
         gitForm.style.display = 'none';
         gitSuccess.style.display = 'block';
       } else {
-        alert('Something went wrong. Please email us directly at office@midgettfite.com.');
+        alert('Something went wrong. Please email us directly at ' + __OFFICE_EMAIL__ + '.');
       }
     } catch {
-      alert('Something went wrong. Please email us directly at office@midgettfite.com.');
+      alert('Something went wrong. Please email us directly at ' + __OFFICE_EMAIL__ + '.');
     }
   });
 </script>

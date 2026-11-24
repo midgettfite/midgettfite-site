@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import { office } from '../lib/site.mjs';
+const site = office();
 ---
 <Base title="Property Management | Midgett & Fite Real Estate" description="Residential and commercial property management in Wilson County and Middle Tennessee.">
   <h1>Property Management</h1>
@@ -16,7 +18,7 @@ import Base from '../layouts/Base.astro';
 
   <p>Contact us today to discuss your property management needs. You will be glad you did!</p>
 
-  <p><a href="/contact">Contact for more information</a> or call (615) 444-3136.</p>
+  <p><a href="/contact">Contact for more information</a> or call {site.phone}.</p>
   <p>
     <a href="/residential-property-for-rent">Residential Property for Rent</a> &nbsp;·&nbsp;
     <a href="/commercial-property-for-rent">Commercial Property for Rent</a>

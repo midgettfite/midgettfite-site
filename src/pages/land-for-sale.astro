@@ -1,14 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
+import { office } from '../lib/site.mjs';
 import { getCollection } from 'astro:content';
 import ListingCard from '../components/ListingCard.astro';
 const listings = (await getCollection('listings'))
   .filter((l) => l.data.category === 'land-sale')
   .sort((a, b) => (a.data.status === 'sold-leased' ? 1 : 0) - (b.data.status === 'sold-leased' ? 1 : 0) || +b.data.listedDate - +a.data.listedDate);
+const site = office();
 ---
 <Base title="Land for Sale | Midgett & Fite Real Estate">
   <h1>Land for Sale</h1>
   {listings.length === 0
-    ? <p>No current listings in this category. Please check back soon or call (615) 444-3136.</p>
+    ? <p>No current listings in this category. Please check back soon or call {site.phone}.</p>
     : <div class="grid">{listings.map((l) => <ListingCard l={l} />)}</div>}
 </Base>

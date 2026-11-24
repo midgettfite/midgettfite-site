@@ -14,6 +14,7 @@ Cloudflare Pages build settings: build command `npm run build`, output directory
 ## Structure
 - `src/content.config.ts` — listing schema (Astro content collection, glob loader)
 - `src/content/listings/*.md` — one file per property (two samples included; the CMS edits these)
+- `src/site-content/*.yml` — team, testimonials, office details, home page (MF-315; the CMS edits these, `src/lib/site.mjs` checks them; phone, email and address live only in `office.yml`)
 - `src/pages/*` — home, 5 category pages (exact existing slugs), static stubs
 - `src/pages/property/[id].astro` — listing detail (gallery, "Price Update!" badge, video, contact)
 - `src/layouts/Base.astro` — header/nav/footer (matches current site IA)

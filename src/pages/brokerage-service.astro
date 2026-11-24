@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import { office } from '../lib/site.mjs';
+const site = office();
 ---
 <Base title="Brokerage Services | Midgett & Fite Real Estate" description="Full-service residential, commercial, and land brokerage in Middle Tennessee.">
   <h1>Brokerage Services</h1>
@@ -14,7 +16,7 @@ import Base from '../layouts/Base.astro';
   <p>We provide current market trends to give you the confidence you need to make an informed buying decision. Property listings that meet your criteria will be e-mailed to you daily, or if you prefer, our automated system can check and send updates from the MLS hourly.</p>
   <p>Once you choose a property, we will structure the Purchase and Sale Agreement to protect your interests, and we can analyze the property relative to other similar parcels to assure you are paying a fair price. Midgett &amp; Fite will walk with you through the purchasing process to ensure your needs are met and your purchase is sound.</p>
 
-  <p><a href="/contact">Contact for more information</a> or call (615) 444-3136.</p>
+  <p><a href="/contact">Contact for more information</a> or call {site.phone}.</p>
   <p>
     <a href="/residential-property-for-sale">Residential Property for Sale</a> &nbsp;·&nbsp;
     <a href="/commercial-property-for-sale">Commercial Property for Sale</a>

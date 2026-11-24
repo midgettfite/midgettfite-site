@@ -1,0 +1,66 @@
+welcomeText: Speak to one of our team members today! We look forward to your
+  call — and we're ready to help you fulfill your real estate dreams.
+slides:
+  - photo: /img/hero-home.png
+    caption: Midgett & Fite Real Estate — Buy, Sell, Rent, Invest in Middle Tennessee
+    showWhole: true
+    buttons: none
+  - photo: /img/hero-residential.jpg
+    caption: Residential real estate in Middle Tennessee
+    showWhole: false
+    buttons: residential
+  - photo: /img/hero-commercial.jpg
+    caption: Commercial real estate in Middle Tennessee
+    showWhole: false
+    buttons: commercial
+reviews:
+  - name: Jennifer A.
+    photo: /img/review-jennifer.jpg
+    quote: “Midgett & Fite is a family-friendly real estate business whose employees
+      deeply care for clients beyond what is being bought or sold. We have
+      greatly enjoyed and benefited from working with Midgett & Fite in the past
+      and will gladly choose to work with them again in the future.”
+  - name: Micah M.
+    photo: /img/review-micah.jpg
+    quote: “Thank you, Midgett & Fite, for helping me buy my first house! Dan
+      Midgett did a great job looking hard and finding something that would meet
+      my needs, well within my budget— I'm really happy!”
+  - name: Anna S.
+    photo: /img/review-anna.jpg
+    quote: Midgett and Fite did a great job helping my husband and I find and
+      purchase our very first home! They were very attentive to all the things
+      that we wanted in a new home, and did a great job working within our time
+      schedule and our budgeting needs. Midgett and Fite went above and beyond
+      to help us even through some difficult time constraints and complications
+      with the contract. I would definitely recommend them to anyone looking to
+      buy or sell a home.
+  - name: Jason L.
+    photo: /img/review-jason.jpg
+    quote: “Dan is the man you want in your corner! His high level of knowledge and
+      integrity were key for us while making such a major decision. Him and his
+      entire team were honest and attentive to our unique circumstances, and we
+      highly recommend them, especially to first-time buyers like ourselves.
+      Thank you, Midgett & Fite Real Estate!”
+  - name: Matthew H.
+    photo: /img/review-matthew.jpg
+    quote: “Great service! Dan helped me find the perfect property and took care of
+      lots of things I wouldn't have thought about. He obviously knows the
+      business inside and out and isn't afraid to be honest about things that
+      might be of concern. I'd recommend him to anyone.”
+  - name: Levi H.
+    photo: /img/review-levi.jpg
+    quote: “When my dad died, the house he left me was a huge mess. Dan worked with
+      me and my brother on a complicated remodeling venture and got it done
+      really fast and professionally and then turned around and sold it. Dan is
+      so knowledgeable about the market and knew how to guide us every step of
+      the way with all the problems we had with various potential buyers… he's
+      also FAST. I really can't imagine having a better real estate agent. I
+      can't recommend him enough.”
+  - name: Heather L.
+    photo: /img/review-heather.jpg
+    quote: The sales team “Family” at Midgett and Fite were absolutely Phenomenal.
+      They are very knowledgeable, friendly, and know the business backward and
+      forwards. They relay any and all information in layman's terms so you can
+      understand and make a sound decision on your purchase. They have been in
+      the real estate business for years for a reason. They are honest, caring
+      and want you to have a phenomenal experience.
