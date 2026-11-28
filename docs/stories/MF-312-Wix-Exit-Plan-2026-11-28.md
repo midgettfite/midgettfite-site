@@ -32,7 +32,10 @@ holder) can do it.
 1. Find out who has the Wix login. Dan's forwarded email went to the account's address, which is a good clue.
 2. In Wix, open **Billing & Payments → Subscriptions** and write down each item: the plan (Premium/Business), the
    domain, any mailboxes or apps, the renewal date, the price and the card.
-3. Check for anything else in the account: Wix Inbox or Contacts (old form submissions), Bookings, Payments, email
+3. Open **Domains** and list **every** domain Wix holds. Steve remembers a second one, something like
+   "Tennessee Property Management". It isn't in any repo, and the obvious names (checked 11/28) belong to other
+   people or are for sale.
+4. Check for anything else in the account: Wix Inbox or Contacts (old form submissions), Bookings, Payments, email
    marketing, other sites.
 - **Done when:** the table above has a "billed" line for each Wix item, and we know the renewal date.
 
@@ -52,7 +55,10 @@ holder) can do it.
 - **Done when:** a real property email shows current listings with photos from midgettfite.com, and nothing in Ivy
   mentions Wix.
 
-### C. Move the old domain's registration off Wix (Steve + Dan, 20 min, then up to 5 days)
+### C. Move the domains' registration off Wix (Steve + Dan, 20 min each, then up to 5 days)
+Do this for **each domain** found in A. For a second domain: if it gets real traffic or appears in old ads or
+signs, transfer it and redirect it to midgettfite.com like the first. If not, ask Dan whether to let it lapse.
+
 `investment-property-management-tn.com` keeps old links and Google results working. Keep it, as MF-312 recommends.
 1. In Wix: **Domains → the domain → Advanced → Transfer away from Wix**. Unlock it and get the transfer code.
 2. In **M&F's** Cloudflare account (not Steve's): **Domain Registration → Transfer**. Enter the code and pay about
