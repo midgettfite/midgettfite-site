@@ -122,11 +122,11 @@ Update MF-312's status and the account move plan's Stage 7 line. The coordinator
   It's safe to remove from Wix's list.
 - **So task F changes:** there's nothing to cancel. Remove `midgettfite.com` from Wix's list, and once C is done,
   take the card off the Wix account.
-- **C started.** Steve OK'd "Transfer away from Wix", and it's confirmed. Wix emailed the authorization code to
+- **C submitted.** Steve entered the code in M&F's Cloudflare and paid; Cloudflare says the transfer is in progress (up to 7 days, faster if the Wix approval email is clicked). Details of how it got there: Steve OK'd "Transfer away from Wix", and it's confirmed. Wix emailed the authorization code to
   the account's address and turned off the domain's auto-renew. The domain's DNS zone is already in M&F's
   Cloudflare account. Still to do: in M&F's Cloudflare, go to **Domain Registration → Transfer Domains**, enter the
   code and pay about $10, which adds a year. That needs a payment card on M&F's Cloudflare account (account move
   plan 0c). The old domain also has an unused MX record → `webmail1.sitebuildit.com`. Clean it up in G.
 - **B deployed.** PROD's listing cache was last refreshed 10/30 with Wix-hosted photos, and two of the three
   active rentals were missing. Ivy PR #65 switches it to the site feed on midgettfite.com and was deployed from
-  beacon. All 213 test files pass. Next: confirm the next hourly refresh fills the cache from the feed.
+  beacon. All 213 test files pass. Confirmed at the 15:00 UTC refresh: all 10 residential listings came from the feed with photos on midgettfite.com, and the two missing rentals are back. Removed the 2 leftover rows that still had Wix photos (listings no longer on the site). Nothing in the cache points at Wix now. Still to do: remove the Wix reader after a week on the feed (about 12/5).
